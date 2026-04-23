@@ -1,0 +1,1424 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lartirigoyen — Diagramas de Flujo · Algoritmo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+/* ======================================================
+   CSS CUSTOM PROPERTIES
+   ====================================================== */
+:root {
+  --brand-primary:       #1E5F4A;
+  --brand-primary-dark:  #0F3D2E;
+  --brand-primary-light: #D9E8E1;
+  --brand-secondary:     #3A5A6C;
+  --brand-secondary-lt:  #DCE4E9;
+  --n-50:  #FAFAFA;
+  --n-100: #F4F4F5;
+  --n-200: #E4E4E7;
+  --n-300: #D4D4D8;
+  --n-500: #71717A;
+  --n-700: #3F3F46;
+  --n-900: #18181B;
+  --gold:       #B08D3F;
+  --gold-light: #F5EEDC;
+  --red:        #B54A3C;
+  --red-light:  #F5E0DB;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Courier New', Consolas, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--n-50); color: var(--n-700); }
+body { font-family: var(--font); font-size: 14px; font-weight: 400;
+  line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* ======================================================
+   TOPBAR
+   ====================================================== */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--brand-primary-dark);
+  height: 56px; display: flex; align-items: center;
+  padding: 0 32px; gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 1px 8px rgba(0,0,0,.2);
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.topbar .brand img { height: 20px; display: block; opacity: .88; }
+.topbar .brand .sep { width: 1px; height: 18px; background: rgba(255,255,255,.18); }
+.topbar .brand .proj { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.82);
+  letter-spacing: -0.01em; white-space: nowrap; }
+.topbar nav { display: flex; gap: 2px; margin-left: 24px; }
+.topbar nav button {
+  background: transparent; border: 0;
+  color: rgba(255,255,255,.6); font-family: var(--font);
+  font-size: 12.5px; font-weight: 500;
+  padding: 7px 14px; border-radius: 8px;
+  cursor: pointer; transition: all 180ms; white-space: nowrap;
+}
+.topbar nav button:hover { background: rgba(255,255,255,.08); color: rgba(255,255,255,.88); }
+.topbar nav button.active { background: var(--brand-primary); color: #fff; }
+.topbar .spacer { flex: 1; }
+.topbar .edit-state {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
+  padding: 4px 10px; border-radius: 99px;
+  color: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.14);
+}
+.topbar .edit-state.on { background: var(--brand-primary-light); color: var(--brand-primary); border-color: transparent; }
+.topbar .btn-edit {
+  margin-left: 8px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.82); font-family: var(--font);
+  font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: var(--r-md);
+  cursor: pointer; transition: all 180ms;
+}
+.topbar .btn-edit:hover { background: rgba(255,255,255,.16); }
+.topbar .btn-edit.on { background: var(--brand-primary-light); color: var(--brand-primary); border-color: transparent; }
+
+/* ======================================================
+   PAGE HEAD
+   ====================================================== */
+.page-head { padding: 32px 48px 20px; border-bottom: 1px solid var(--n-200); background: #fff; }
+.eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--brand-primary); margin-bottom: 6px; }
+.page-head h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--n-900); margin-bottom: 8px; }
+.page-head .desc { font-size: 13.5px; color: var(--n-500); margin-bottom: 16px; max-width: 760px; }
+.page-head .meta { display: flex; gap: 28px; font-size: 11px; color: var(--n-500); }
+.page-head .meta b { color: var(--n-700); font-weight: 600; }
+
+/* ======================================================
+   VIEWS
+   ====================================================== */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ======================================================
+   OVERVIEW
+   ====================================================== */
+.overview { padding: 28px 48px 72px; }
+.ov-legend {
+  background: #fff; border: 1px solid var(--n-200); border-radius: var(--r-lg);
+  padding: 18px 24px; margin-bottom: 24px;
+  display: flex; flex-wrap: wrap; gap: 20px 44px; align-items: flex-start;
+}
+.ov-legend h4 { font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--n-500); margin-bottom: 9px; }
+.ov-legend .items { display: flex; gap: 10px 18px; flex-wrap: wrap; }
+.ov-legend .chip { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--n-700); }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+.sw-border { width: 13px; height: 13px; border-radius: 4px; border: 1.5px solid; background: #fff; display: inline-block; flex-shrink: 0; }
+.sw-diamond { width: 11px; height: 11px; transform: rotate(45deg); border-radius: 2px;
+  border: 1.5px solid var(--gold); background: var(--gold-light); display: inline-block; flex-shrink: 0; }
+.ov-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.ov-card {
+  background: #fff; border: 1px solid var(--n-200); border-radius: var(--r-lg);
+  padding: 22px 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.03);
+  transition: box-shadow 180ms, border-color 180ms;
+}
+.ov-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07), 0 8px 24px rgba(0,0,0,.06); border-color: var(--n-300); }
+.ov-card h3 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--n-900); margin-bottom: 6px; }
+.ov-card .lead { font-size: 12.5px; color: var(--n-500); margin-bottom: 16px; }
+.ov-card .stats { display: flex; gap: 12px; margin-bottom: 16px; }
+.ov-card .kpi { background: var(--n-50); border-radius: var(--r-sm); padding: 8px 12px; flex: 1; }
+.ov-card .kpi .v { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--n-900); }
+.ov-card .kpi .l { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--n-500); margin-top: 1px; }
+.ov-card .ov-btn {
+  width: 100%; padding: 10px; border-radius: var(--r-md);
+  background: var(--n-900); color: #fff; border: 0;
+  font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background 180ms;
+}
+.ov-card .ov-btn:hover { background: var(--brand-primary); }
+.ov-guide { margin-top: 24px; background: #fff; border: 1px solid var(--n-200);
+  border-radius: var(--r-lg); padding: 22px 26px; }
+.ov-guide h3 { font-size: 15px; font-weight: 600; color: var(--n-900); margin: 4px 0 8px; }
+.ov-guide p { font-size: 13px; color: var(--n-500); max-width: 800px; line-height: 1.65; }
+
+/* ======================================================
+   SCENARIOS LIST
+   ====================================================== */
+.scenarios { padding: 20px 48px 80px; }
+.scenario {
+  background: #fff; border: 1px solid var(--n-200);
+  border-radius: var(--r-lg); margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  overflow: hidden; transition: box-shadow 180ms, border-color 180ms;
+}
+.scenario.open {
+  box-shadow: 0 4px 20px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+  border-color: var(--n-300);
+}
+.scn-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 15px 20px; cursor: pointer; user-select: none;
+  transition: background 130ms;
+}
+.scn-header:hover { background: var(--n-50); }
+.scn-toggle {
+  width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--r-sm);
+  background: var(--n-200); color: var(--n-700);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 300; line-height: 1;
+  transition: background 200ms, transform 200ms;
+}
+.scenario.open .scn-toggle { background: var(--brand-primary-light); color: var(--brand-primary); transform: rotate(45deg); }
+.scn-info { flex: 1; }
+.scn-idx { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--n-500); margin-bottom: 2px; }
+.scn-name { font-size: 15.5px; font-weight: 600; color: var(--n-900); letter-spacing: -0.01em; }
+.scn-desc-short { font-size: 12px; color: var(--n-500); margin-top: 1px; }
+.scn-right { display: flex; align-items: center; gap: 10px; }
+.scn-tags { display: flex; gap: 5px; }
+.scn-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: .04em;
+  padding: 3px 9px; border-radius: 99px; white-space: nowrap;
+  background: var(--n-100); color: var(--n-700); border: 1px solid var(--n-200);
+}
+.scn-tag.principal { background: var(--brand-primary-light); color: var(--brand-primary); border-color: transparent; }
+.scn-tag.excepcion { background: var(--red-light); color: var(--red); border-color: transparent; }
+.scn-node-count { font-size: 11px; color: var(--n-500); white-space: nowrap; }
+.scn-body { display: none; border-top: 1px solid var(--n-200); }
+.scenario.open .scn-body { display: block; }
+
+/* ======================================================
+   DIAGRAM
+   ====================================================== */
+.diagram-wrap { overflow-x: auto; background: var(--n-50); }
+.diagram-wrap svg { display: block; }
+
+/* ======================================================
+   NOTES BLOCK
+   ====================================================== */
+.notes-block {
+  background: #fefdf5; border-top: 1px solid #f0e3a8;
+  padding: 11px 24px; font-size: 12.5px; color: #7a6a28; line-height: 1.6;
+}
+.notes-block b { color: #5a4e1a; }
+
+/* ======================================================
+   STATES BAND
+   ====================================================== */
+.states-band { border-top: 1px solid var(--n-200); background: var(--n-50); padding: 14px 24px 16px; }
+.sb-header { font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--n-500); margin-bottom: 12px; }
+.sb-groups { display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.sb-group { display: flex; flex-direction: column; gap: 5px; }
+.sb-group-label { font-size: 10px; font-weight: 600; color: var(--n-500); text-transform: uppercase; letter-spacing: .06em; }
+.sb-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.sb-chip {
+  background: #fff; border: 1px solid var(--n-200); border-radius: 8px;
+  padding: 8px 12px; display: flex; flex-direction: column; gap: 2px;
+  min-width: 150px; max-width: 200px;
+}
+.sb-chip .num { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
+.sb-chip .state-name { font-size: 11.5px; font-weight: 500; color: var(--n-700); line-height: 1.35; }
+.sb-badges { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 5px; }
+.sb-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--n-100); color: var(--n-700); border: 1px solid var(--n-200);
+  cursor: pointer; transition: all 130ms;
+}
+.sb-badge:hover { background: var(--brand-primary-light); color: var(--brand-primary); border-color: var(--brand-primary-light); }
+
+/* ======================================================
+   DETAIL PANEL
+   ====================================================== */
+.detail-panel {
+  position: fixed; z-index: 200; display: none;
+  width: 340px; background: #fff; border: 1px solid var(--n-200);
+  border-radius: var(--r-xl); box-shadow: 0 10px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+.detail-panel.open { display: block; }
+.dp-head {
+  background: linear-gradient(to bottom, var(--n-50), #fff);
+  padding: 15px 18px 13px; border-bottom: 1px solid var(--n-200); position: relative;
+}
+.dp-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--n-500); margin-bottom: 3px; }
+.dp-title { font-size: 16px; font-weight: 600; color: var(--n-900); letter-spacing: -0.01em; padding-right: 28px; }
+.dp-close {
+  position: absolute; top: 10px; right: 12px;
+  background: transparent; border: 0; font-size: 20px; cursor: pointer;
+  color: var(--n-400, var(--n-500)); line-height: 1; padding: 2px 4px; border-radius: 4px;
+  transition: color 130ms;
+}
+.dp-close:hover { color: var(--n-900); }
+.dp-body { padding: 12px 18px; }
+.dp-row {
+  display: flex; gap: 10px; padding: 7px 0;
+  border-bottom: 1px dashed var(--n-200); font-size: 12.5px; align-items: flex-start;
+}
+.dp-row:last-child { border-bottom: 0; }
+.dp-row b { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--n-500); min-width: 76px; padding-top: 1px; }
+.dp-row span { color: var(--n-700); flex: 1; }
+.dp-desc { margin-top: 11px; background: var(--n-50); border-radius: var(--r-sm);
+  padding: 9px 11px; font-size: 12.5px; color: var(--n-700); line-height: 1.55; }
+
+/* ======================================================
+   EDIT MODE
+   ====================================================== */
+body.edit-on [data-edit] {
+  outline: 1px dashed rgba(30,95,74,.4); outline-offset: 2px; cursor: text; border-radius: 2px;
+}
+body.edit-on [contenteditable="true"]:focus {
+  outline: 2px solid var(--brand-primary); outline-offset: 2px; background: var(--brand-primary-light);
+}
+.save-hint {
+  display: none; position: fixed; bottom: 20px; right: 20px; z-index: 300;
+  background: var(--n-900); color: #fff;
+  padding: 12px 18px; border-radius: var(--r-lg);
+  font-size: 12px; font-weight: 500;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
+  align-items: center; gap: 14px;
+}
+body.edit-on .save-hint { display: flex; }
+.save-hint button {
+  background: var(--brand-primary-light); color: var(--brand-primary);
+  border: 0; padding: 6px 12px; border-radius: var(--r-sm);
+  font-family: var(--font); font-weight: 700; font-size: 12px; cursor: pointer;
+}
+
+/* ======================================================
+   PASSWORD MODAL
+   ====================================================== */
+.pw-mask {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(15,61,46,.42); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+}
+.pw-mask.open { display: flex; }
+.pw-card {
+  background: #fff; border-radius: var(--r-xl); padding: 30px 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.22); width: 360px;
+}
+.pw-card h3 { font-size: 17px; font-weight: 700; color: var(--n-900); letter-spacing: -0.01em; margin-bottom: 4px; }
+.pw-card p { color: var(--n-500); font-size: 13px; margin-bottom: 18px; }
+.pw-card input {
+  width: 100%; padding: 11px 14px; border: 1px solid var(--n-200);
+  border-radius: var(--r-md); font-family: var(--font); font-size: 15px;
+  letter-spacing: .2em; text-align: center;
+  transition: border-color 150ms, outline 150ms;
+}
+.pw-card input:focus { outline: 2px solid var(--brand-primary); outline-offset: -1px; border-color: transparent; }
+.pw-card .err { color: var(--red); font-size: 11px; margin-top: 6px; min-height: 14px; }
+.pw-card .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.pw-card button { padding: 9px 16px; border-radius: var(--r-md); font-family: var(--font); font-weight: 600; font-size: 13px; cursor: pointer; border: 0; }
+.pw-cancel { background: var(--n-100); color: var(--n-700); }
+.pw-ok { background: var(--brand-primary); color: #fff; }
+.pw-ok:hover { background: var(--brand-primary-dark); }
+</style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+  <div class="brand">
+    <img src="assets/logo/imagotipo-blanco.png" alt="Simpleza">
+    <div class="sep"></div>
+    <div class="proj">Lartirigoyen × Algoritmo</div>
+  </div>
+  <nav id="main-nav">
+    <button class="tab-btn active" data-view="overview">Resumen</button>
+    <button class="tab-btn" data-view="compra">Compra de Insumos</button>
+    <button class="tab-btn" data-view="venta">Venta de Insumos</button>
+    <button class="tab-btn" data-view="directa">Venta Directa</button>
+  </nav>
+  <div class="spacer"></div>
+  <div class="edit-state" id="edit-indicator">Lectura</div>
+  <button class="btn-edit" id="btn-edit">Editar</button>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<section class="view active" id="v-overview">
+  <div class="page-head">
+    <div class="eyebrow">Borrador de trabajo — 24 abr 2026</div>
+    <h1>Mapa de trámites — Lartirigoyen</h1>
+    <p class="desc">Diagramas de flujo de documentos preparados por Simpleza para validar con el equipo de Algoritmo cómo quedan registrados los trámites en el sistema. Cada escenario tiene su propio diagrama completo. Reunión interna: 25/4 · Validación con Algoritmo: 30/4.</p>
+    <div class="meta">
+      <span><b>Próxima revisión:</b> viernes 25 de abril · equipo Lartirigoyen</span>
+      <span><b>Validación con Algoritmo:</b> jueves 30 de abril</span>
+      <span><b>Versión:</b> 2.0 — rediseño completo</span>
+    </div>
+  </div>
+  <div class="overview">
+    <div class="ov-legend">
+      <div>
+        <h4>Sectores</h4>
+        <div class="items" id="legend-sectors"></div>
+      </div>
+      <div>
+        <h4>Tipo de nodo</h4>
+        <div class="items">
+          <span class="chip"><span class="sw-border" style="border-color:#2E7A63;"></span> Documento</span>
+          <span class="chip"><span class="sw-diamond"></span> Decisión (autorización)</span>
+          <span class="chip"><span class="sw" style="background:#1E5F4A; border-radius:99px;"></span> Cierre de trámite</span>
+          <span class="chip"><span class="sw-border" style="border-color:#D4D4D8; border-style:dashed;"></span> Estado previo</span>
+        </div>
+      </div>
+      <div>
+        <h4>Posición del documento</h4>
+        <div class="items">
+          <span class="chip"><span class="sw" style="background:#2E7A63;"></span> Comercial — compromiso</span>
+          <span class="chip"><span class="sw" style="background:#B08D3F;"></span> Física — movimiento de stock</span>
+          <span class="chip"><span class="sw" style="background:#3A5A6C;"></span> Contable — imputación</span>
+        </div>
+      </div>
+    </div>
+    <div class="ov-grid" id="ov-grid"></div>
+    <div class="ov-guide">
+      <div class="eyebrow">Cómo leer los diagramas</div>
+      <h3>Flujo de documentos, de arriba hacia abajo</h3>
+      <p>Cada trámite se representa como un flujo de <b>documentos</b> (no de acciones). Los <b>sectores son columnas verticales</b> y el proceso desciende. Las flechas muestran qué documento se genera a partir de cuál. Las ramas paralelas indican que dos documentos pueden generarse en cualquier orden. La <b>banda de estados</b> debajo de cada diagrama muestra los estados posibles del trámite según el lenguaje de Algoritmo. Tocá cualquier nodo para ver su detalle.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROCESS VIEWS (generated by JS) ===== -->
+<section class="view" id="v-compra"></section>
+<section class="view" id="v-venta"></section>
+<section class="view" id="v-directa"></section>
+
+<!-- ===== DETAIL PANEL ===== -->
+<div class="detail-panel" id="detail-panel">
+  <div class="dp-head">
+    <div class="dp-eyebrow" id="dp-eyebrow">Documento</div>
+    <div class="dp-title" id="dp-title">—</div>
+    <button class="dp-close" onclick="closeDetail()">×</button>
+  </div>
+  <div class="dp-body">
+    <div class="dp-row"><b>Sector</b><span id="dp-sector">—</span></div>
+    <div class="dp-row"><b>Tipo</b><span id="dp-type">—</span></div>
+    <div class="dp-row"><b>Posición</b><span id="dp-pos">—</span></div>
+    <div class="dp-row"><b>Sigla</b><span id="dp-code">—</span></div>
+    <div class="dp-desc" id="dp-desc" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ===== PASSWORD MODAL ===== -->
+<div class="pw-mask" id="pw-mask">
+  <div class="pw-card">
+    <h3>Modo edición</h3>
+    <p>Ingresá la contraseña para editar el documento.</p>
+    <input type="password" id="pw-input" maxlength="24" placeholder="••••••" autocomplete="off">
+    <div class="err" id="pw-err">&nbsp;</div>
+    <div class="actions">
+      <button class="pw-cancel" onclick="closePw()">Cancelar</button>
+      <button class="pw-ok" onclick="submitPw()">Desbloquear</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SAVE HINT ===== -->
+<div class="save-hint">
+  <span>Modo edición activo — los cambios se guardan automáticamente.</span>
+  <button onclick="exitEdit()">Salir</button>
+</div>
+
+<script>
+/* ============================================================
+   SUPABASE CONFIG — completar credenciales para sincronización
+   Dejar vacío para trabajar solo con localStorage.
+   ============================================================ */
+const SUPA_URL   = '';          // https://xxx.supabase.co
+const SUPA_KEY   = '';          // eyJ...
+const SUPA_TABLE = 'larti_edits';
+let supa = null;
+if (SUPA_URL && SUPA_KEY && window.supabase) {
+  try { supa = window.supabase.createClient(SUPA_URL, SUPA_KEY); } catch(e) {}
+}
+
+/* ============================================================
+   DATOS DE REFERENCIA
+   ============================================================ */
+const SECTORS = {
+  cliente:   { label: 'Cliente',        color: '#8B8B8B' },
+  comercial: { label: 'Comercial',      color: '#2E7A63' },
+  gerencia:  { label: 'Gerencia',       color: '#4A6B7A' },
+  creditos:  { label: 'Créditos',       color: '#735E5E' },
+  deposito:  { label: 'Depósito',       color: '#8B7E3F' },
+  logistica: { label: 'Logística',      color: '#5E7355' },
+  admin:     { label: 'Administración', color: '#6A6A6A' },
+  finanzas:  { label: 'Finanzas',       color: '#4A4A4A' },
+  bayer:     { label: 'Bayer',          color: '#9B7A5F' },
+};
+
+const POS = {
+  com: { bg: '#2E7A63', ink: '#fff', label: 'Comercial' },
+  fis: { bg: '#B08D3F', ink: '#fff', label: 'Física' },
+  con: { bg: '#3A5A6C', ink: '#fff', label: 'Contable' },
+};
+
+const META_ACTIONS = {
+  M:       'Modificar',
+  A:       'Anular',
+  RevAut:  'Revertir Autorización',
+  RevRech: 'Revertir Rechazo',
+  RevAnu:  'Revertir Anulación',
+};
+
+/* ============================================================
+   TRAMITES — fuente de verdad de los 12 escenarios
+   ============================================================ */
+const TRAMITES = [
+  /* ===== COMPRA DE INSUMOS ===== */
+  {
+    id: 'compra', name: 'Compra de Insumos',
+    desc: 'Trámite de abastecimiento: desde la Orden de Compra hasta la recepción, factura y eventual devolución.',
+    scenarios: [
+      {
+        id: 'c1', name: 'Compra de Insumos', type: 'principal',
+        desc: 'Orden de Compra → autorización → Remito y Factura en ramas paralelas.',
+        lanes: ['comercial','gerencia','deposito','admin'],
+        nodes: [
+          {id:'oc',  type:'document', title:'Orden de Compra',       code:'OC',  lane:'comercial', pos:'com', y:1},
+          {id:'gw1', type:'gateway',  title:'¿Autoriza?',            lane:'gerencia',              y:2},
+          {id:'rem', type:'document', title:'Remito de Recepción',   code:'REM', lane:'deposito',  pos:'fis', y:3},
+          {id:'fac', type:'document', title:'Factura de Compra',     code:'FAC', lane:'admin',     pos:'con', y:3},
+          {id:'end', type:'end',      title:'Compra finalizada',     lane:'admin',                 y:4},
+        ],
+        flows: [
+          {from:'oc',  to:'gw1'},
+          {from:'gw1', to:'oc',  label:'No', exception:true},
+          {from:'gw1', to:'rem', label:'Sí'},
+          {from:'gw1', to:'fac', label:'Sí'},
+          {from:'rem', to:'end'},
+          {from:'fac', to:'end'},
+        ],
+        states: [
+          {docId:'oc',  label:'Orden de Compra',      color:'#2E7A63', items:[
+            {n:1, name:'Pendiente de autorización', badges:['M','A']},
+            {n:2, name:'Autorizada',                badges:['RevAut']},
+          ]},
+          {docId:'rem', label:'Remito de Recepción',  color:'#8B7E3F', items:[
+            {n:3, name:'Recibido · pendiente de facturar'},
+          ]},
+          {docId:'fac', label:'Factura de Compra',    color:'#3A5A6C', items:[
+            {n:4, name:'Facturada · pendiente de recibir'},
+          ]},
+        ],
+        note:'Remito y Factura son <b>ramas paralelas</b>. Pueden registrarse en cualquier orden. La compra cierra cuando ambos documentos están completos.',
+      },
+      {
+        id: 'c2', name: 'Cuenta y Orden', type: 'variante',
+        desc: 'Igual al principal + Liquidación al Tercero al cierre de la compra.',
+        lanes: ['comercial','gerencia','deposito','admin','finanzas'],
+        nodes: [
+          {id:'oc',     type:'document', title:'Orden de Compra',        code:'OC',     lane:'comercial', pos:'com', y:1},
+          {id:'gw1',    type:'gateway',  title:'¿Autoriza?',             lane:'gerencia',                y:2},
+          {id:'rem',    type:'document', title:'Remito de Recepción',    code:'REM',    lane:'deposito',  pos:'fis', y:3},
+          {id:'fac',    type:'document', title:'Factura de Compra',      code:'FAC',    lane:'admin',     pos:'con', y:3},
+          {id:'liqter', type:'document', title:'Liquidación al Tercero', code:'LIQTER', lane:'finanzas',  pos:'con', y:4},
+          {id:'end',    type:'end',      title:'Liquidada al tercero',   lane:'finanzas',                y:5},
+        ],
+        flows: [
+          {from:'oc',     to:'gw1'},
+          {from:'gw1',    to:'oc',     label:'No', exception:true},
+          {from:'gw1',    to:'rem',    label:'Sí'},
+          {from:'gw1',    to:'fac',    label:'Sí'},
+          {from:'rem',    to:'liqter'},
+          {from:'fac',    to:'liqter'},
+          {from:'liqter', to:'end'},
+        ],
+        states: [
+          {docId:'oc',     label:'Orden de Compra',        color:'#2E7A63', items:[{n:1, name:'Pendiente de autorización', badges:['M','A']},{n:2, name:'Autorizada', badges:['RevAut']}]},
+          {docId:'rem',    label:'Remito de Recepción',    color:'#8B7E3F', items:[{n:3, name:'Recibido · pendiente de facturar'}]},
+          {docId:'fac',    label:'Factura de Compra',      color:'#3A5A6C', items:[{n:4, name:'Facturada · pendiente de liquidar'}]},
+          {docId:'liqter', label:'Liquidación al Tercero', color:'#4A4A4A', items:[{n:5, name:'Liquidada al tercero'}]},
+        ],
+        note:'La Liquidación al Tercero se genera en Finanzas una vez que tanto el Remito como la Factura están completos.',
+      },
+      {
+        id: 'c3', name: 'Devolución con Nota de Crédito', type: 'variante',
+        desc: 'Desde una compra finalizada: devolución física y emisión de NC de compra.',
+        lanes: ['deposito','admin'],
+        nodes: [
+          {id:'cstate', type:'state',    title:'Compra finalizada',     lane:'admin',    y:1},
+          {id:'rde',    type:'document', title:'Remito de Devolución',  code:'RDE', lane:'deposito', pos:'fis', y:2},
+          {id:'ncr',    type:'document', title:'Nota de Crédito Compra', code:'NCR', lane:'admin',   pos:'con', y:3},
+          {id:'end',    type:'end',      title:'Cerrada con NC',        lane:'admin',    y:4},
+        ],
+        flows: [
+          {from:'cstate', to:'rde'},
+          {from:'rde',    to:'ncr'},
+          {from:'ncr',    to:'end'},
+        ],
+        states: [
+          {docId:'rde', label:'Remito de Devolución', color:'#8B7E3F', items:[{n:1, name:'Devolución registrada'}]},
+          {docId:'ncr', label:'Nota de Crédito',      color:'#3A5A6C', items:[{n:2, name:'NC emitida · compra cerrada'}]},
+        ],
+        note:'Este circuito se dispara desde una compra ya finalizada. El Remito de Devolución reversa la posición física y la NC reversa la posición contable.',
+      },
+    ],
+  },
+  /* ===== VENTA DE INSUMOS ===== */
+  {
+    id: 'venta', name: 'Venta de Insumos',
+    desc: 'Pedido de venta con doble autorización (comercial y financiera), Factura y Remito en paralelo, devoluciones y NC.',
+    scenarios: [
+      {
+        id: 'v1', name: 'Venta de Insumos', type: 'principal',
+        desc: 'Pedido → doble autorización paralela → Factura y Remito en ramas paralelas.',
+        lanes: ['comercial','gerencia','creditos','admin','deposito'],
+        nodes: [
+          {id:'ped',   type:'document', title:'Pedido de Venta',   code:'PED', lane:'comercial', pos:'com', y:1},
+          {id:'gwcom', type:'gateway',  title:'¿Aut. comercial?',  lane:'gerencia',               y:2},
+          {id:'gwfin', type:'gateway',  title:'¿Aut. financiera?', lane:'creditos',               y:2},
+          {id:'fac',   type:'document', title:'Factura de Venta',  code:'FAC', lane:'admin',     pos:'con', y:3},
+          {id:'rem',   type:'document', title:'Remito',            code:'REM', lane:'deposito',  pos:'fis', y:3},
+          {id:'end',   type:'end',      title:'Venta finalizada',  lane:'admin',                 y:4},
+        ],
+        flows: [
+          {from:'ped',   to:'gwcom'},
+          {from:'ped',   to:'gwfin'},
+          {from:'gwcom', to:'ped',   label:'No', exception:true},
+          {from:'gwfin', to:'ped',   label:'No', exception:true},
+          {from:'gwcom', to:'fac',   label:'Sí'},
+          {from:'gwfin', to:'rem',   label:'Sí'},
+          {from:'fac',   to:'end'},
+          {from:'rem',   to:'end'},
+        ],
+        states: [
+          {docId:'ped', label:'Pedido de Venta',  color:'#2E7A63', items:[{n:1, name:'Pendiente de autorización', badges:['M','A']},{n:2, name:'Autorizado', badges:['RevAut']}]},
+          {docId:'fac', label:'Factura de Venta', color:'#3A5A6C', items:[{n:3, name:'Facturada · pendiente de entrega'}]},
+          {docId:'rem', label:'Remito',           color:'#8B7E3F', items:[{n:4, name:'Entregado · venta finalizada'}]},
+        ],
+        note:'Las <b>dos autorizaciones son paralelas</b>. Son automáticas si la venta está dentro de los parámetros del sistema. Factura y Remito también son <b>ramas paralelas</b>: pueden emitirse en cualquier orden.',
+      },
+      {
+        id: 'v2', name: 'Entrega anticipada sin autorizar', type: 'variante',
+        desc: 'El Remito Sin Factura se emite antes de completar las autorizaciones.',
+        lanes: ['comercial','gerencia','creditos','deposito','admin'],
+        nodes: [
+          {id:'ped',   type:'document', title:'Pedido de Venta',     code:'PED',   lane:'comercial', pos:'com', y:1},
+          {id:'remsf', type:'document', title:'Remito Sin Factura',  code:'REMSF', lane:'deposito',  pos:'fis', y:2},
+          {id:'gwcom', type:'gateway',  title:'¿Aut. comercial?',    lane:'gerencia',                y:3},
+          {id:'gwfin', type:'gateway',  title:'¿Aut. financiera?',   lane:'creditos',                y:3},
+          {id:'fac',   type:'document', title:'Factura de Venta',    code:'FAC',   lane:'admin',     pos:'con', y:4},
+          {id:'end',   type:'end',      title:'Venta finalizada',    lane:'admin',                  y:5},
+        ],
+        flows: [
+          {from:'ped',   to:'remsf'},
+          {from:'remsf', to:'gwcom'},
+          {from:'remsf', to:'gwfin'},
+          {from:'gwcom', to:'ped',  label:'No', exception:true},
+          {from:'gwfin', to:'ped',  label:'No', exception:true},
+          {from:'gwcom', to:'fac',  label:'Sí'},
+          {from:'gwfin', to:'fac'},
+          {from:'fac',   to:'end'},
+        ],
+        states: [
+          {docId:'ped',   label:'Pedido de Venta',    color:'#2E7A63', items:[{n:1, name:'Pedido registrado'}]},
+          {docId:'remsf', label:'Remito Sin Factura', color:'#8B7E3F', items:[{n:2, name:'Entregado · pend. autorización'}]},
+          {docId:'fac',   label:'Factura de Venta',   color:'#3A5A6C', items:[{n:3, name:'Facturada · venta finalizada'}]},
+        ],
+        note:'El Remito Sin Factura se emite antes de que el sistema autorice la venta. La entrega física ocurre primero; la facturación cierra después de las dos autorizaciones.',
+      },
+      {
+        id: 'v3', name: 'Venta rechazada o anulada', type: 'excepcion',
+        desc: 'No pasa la autorización. Puede modificarse para reintentar o anularse definitivamente.',
+        lanes: ['comercial','gerencia'],
+        nodes: [
+          {id:'ped',    type:'document', title:'Pedido de Venta', code:'PED', lane:'comercial', pos:'com', y:1},
+          {id:'gwcom',  type:'gateway',  title:'¿Aut. comercial?', lane:'gerencia',             y:2},
+          {id:'endexc', type:'end',      title:'Anulado',         lane:'comercial', exception:true, y:3},
+        ],
+        flows: [
+          {from:'ped',   to:'gwcom'},
+          {from:'gwcom', to:'ped',    label:'No', exception:true},
+          {from:'gwcom', to:'endexc', label:'Anulación'},
+        ],
+        states: [
+          {docId:'ped', label:'Pedido de Venta', color:'#2E7A63', items:[
+            {n:1, name:'No autorizado', badges:['M','RevRech']},
+            {n:2, name:'Anulado',       badges:['RevAnu']},
+          ]},
+        ],
+        note:'La flecha de retorno (roja) vuelve al Pedido para que se modifique y reingrese a autorización. Si se decide anular, el trámite termina definitivamente.',
+      },
+      {
+        id: 'v4', name: 'Cuenta y Orden con Líquido Producto', type: 'variante',
+        desc: 'Tres ramas paralelas post-autorización: Factura, Remito y Líquido Producto.',
+        lanes: ['comercial','gerencia','creditos','admin','deposito','finanzas'],
+        nodes: [
+          {id:'ped',    type:'document', title:'Pedido de Venta',  code:'PED',    lane:'comercial', pos:'com', y:1},
+          {id:'gwcom',  type:'gateway',  title:'¿Aut. comercial?', lane:'gerencia',                 y:2},
+          {id:'gwfin',  type:'gateway',  title:'¿Aut. financiera?',lane:'creditos',                 y:2},
+          {id:'fac',    type:'document', title:'Factura de Venta', code:'FAC',    lane:'admin',     pos:'con', y:3},
+          {id:'rem',    type:'document', title:'Remito',           code:'REM',    lane:'deposito',  pos:'fis', y:3},
+          {id:'liqpro', type:'document', title:'Líquido Producto', code:'LIQPRO', lane:'finanzas',  pos:'con', y:3},
+          {id:'end',    type:'end',      title:'Venta finalizada', lane:'finanzas',                 y:4},
+        ],
+        flows: [
+          {from:'ped',    to:'gwcom'},
+          {from:'ped',    to:'gwfin'},
+          {from:'gwcom',  to:'ped',    label:'No', exception:true},
+          {from:'gwfin',  to:'ped',    label:'No', exception:true},
+          {from:'gwcom',  to:'fac',    label:'Sí'},
+          {from:'gwfin',  to:'rem',    label:'Sí'},
+          {from:'gwfin',  to:'liqpro', label:'Sí'},
+          {from:'fac',    to:'end'},
+          {from:'rem',    to:'end'},
+          {from:'liqpro', to:'end'},
+        ],
+        states: [
+          {docId:'ped',    label:'Pedido de Venta',  color:'#2E7A63', items:[{n:1, name:'Autorizado (doble)', badges:['RevAut']}]},
+          {docId:'fac',    label:'Factura de Venta', color:'#3A5A6C', items:[{n:2, name:'Facturada'}]},
+          {docId:'rem',    label:'Remito',           color:'#8B7E3F', items:[{n:3, name:'Entregado'}]},
+          {docId:'liqpro', label:'Líquido Producto', color:'#4A4A4A', items:[{n:4, name:'Liquidado'}]},
+        ],
+        note:'Venta por Cuenta y Orden: después de la doble autorización se generan <b>tres documentos en paralelo</b>. Los tres deben estar completos para cerrar la venta.',
+      },
+      {
+        id: 'v5', name: 'Devolución con Nota de Crédito', type: 'variante',
+        desc: 'Desde venta finalizada: solicitud, autorización, devolución física y NC de venta.',
+        lanes: ['comercial','gerencia','deposito','admin'],
+        nodes: [
+          {id:'vstate', type:'state',    title:'Venta finalizada',      lane:'admin',    y:1},
+          {id:'soldev', type:'document', title:'Solicitud de Devolución', code:'SOLDEV', lane:'comercial', pos:'com', y:2},
+          {id:'gwdev',  type:'gateway',  title:'¿Aut. devolución?',     lane:'gerencia', y:3},
+          {id:'rde',    type:'document', title:'Remito de Devolución',  code:'RDE',     lane:'deposito', pos:'fis', y:4},
+          {id:'ncr',    type:'document', title:'Nota de Crédito Venta', code:'NCR',     lane:'admin',    pos:'con', y:5},
+          {id:'end',    type:'end',      title:'Cerrada con NC',        lane:'admin',    y:6},
+        ],
+        flows: [
+          {from:'vstate', to:'soldev'},
+          {from:'soldev', to:'gwdev'},
+          {from:'gwdev',  to:'soldev', label:'No', exception:true},
+          {from:'gwdev',  to:'rde',    label:'Sí'},
+          {from:'rde',    to:'ncr'},
+          {from:'ncr',    to:'end'},
+        ],
+        states: [
+          {docId:'soldev', label:'Solicitud de Devolución', color:'#2E7A63', items:[{n:1, name:'Pendiente de autorización', badges:['M','A']}]},
+          {docId:'rde',    label:'Remito de Devolución',    color:'#8B7E3F', items:[{n:2, name:'Devuelto · pendiente de NC'}]},
+          {docId:'ncr',    label:'Nota de Crédito',         color:'#3A5A6C', items:[{n:3, name:'NC emitida · venta cerrada'}]},
+        ],
+        note:'La devolución requiere autorización explícita antes de devolver la mercadería. La NC reversa la posición contable.',
+      },
+      {
+        id: 'v6', name: 'Solicitud de despacho y logística', type: 'variante',
+        desc: 'Entre la Factura y el Remito se intercalan pasos de Logística (despacho).',
+        lanes: ['comercial','gerencia','creditos','admin','logistica','deposito'],
+        nodes: [
+          {id:'ped',     type:'document', title:'Pedido de Venta',          code:'PED',     lane:'comercial', pos:'com', y:1},
+          {id:'gwcom',   type:'gateway',  title:'¿Aut. comercial?',         lane:'gerencia',                  y:2},
+          {id:'gwfin',   type:'gateway',  title:'¿Aut. financiera?',        lane:'creditos',                  y:2},
+          {id:'fac',     type:'document', title:'Factura de Venta',         code:'FAC',     lane:'admin',     pos:'con', y:3},
+          {id:'soldesp', type:'document', title:'Solicitud de Despacho',    code:'SOLDESP', lane:'logistica', y:4},
+          {id:'prgdesp', type:'document', title:'Programación de Despacho', code:'PRGDESP', lane:'logistica', y:5},
+          {id:'rem',     type:'document', title:'Remito',                   code:'REM',     lane:'deposito',  pos:'fis', y:6},
+          {id:'end',     type:'end',      title:'Venta finalizada',         lane:'deposito',                  y:7},
+        ],
+        flows: [
+          {from:'ped',     to:'gwcom'},
+          {from:'ped',     to:'gwfin'},
+          {from:'gwcom',   to:'ped',     label:'No', exception:true},
+          {from:'gwfin',   to:'ped',     label:'No', exception:true},
+          {from:'gwcom',   to:'fac',     label:'Sí'},
+          {from:'gwfin',   to:'fac'},
+          {from:'fac',     to:'soldesp'},
+          {from:'soldesp', to:'prgdesp'},
+          {from:'prgdesp', to:'rem'},
+          {from:'rem',     to:'end'},
+        ],
+        states: [
+          {docId:'ped',     label:'Pedido de Venta',          color:'#2E7A63', items:[{n:1, name:'Autorizado', badges:['RevAut']}]},
+          {docId:'fac',     label:'Factura de Venta',         color:'#3A5A6C', items:[{n:2, name:'Facturada · pend. despacho'}]},
+          {docId:'soldesp', label:'Solicitud de Despacho',    color:'#5E7355', items:[{n:3, name:'Despacho solicitado'}]},
+          {docId:'prgdesp', label:'Programación de Despacho', color:'#5E7355', items:[{n:4, name:'Despacho programado'}]},
+          {docId:'rem',     label:'Remito',                   color:'#8B7E3F', items:[{n:5, name:'Entregado · venta finalizada'}]},
+        ],
+        note:'En esta variante FAC y REM son <b>secuenciales</b> (no paralelos): Logística coordina el despacho entre la factura y la entrega física.',
+      },
+    ],
+  },
+  /* ===== VENTA DIRECTA (BAYER) ===== */
+  {
+    id: 'directa', name: 'Venta Directa (Bayer)',
+    desc: 'Bayer factura directamente al cliente final. Lartirigoyen registra el acuerdo, autoriza y cobra comisión.',
+    scenarios: [
+      {
+        id: 'd1', name: 'Venta Directa', type: 'principal',
+        desc: 'Registro del acuerdo, autorización, Factura Bayer y Factura de Comisión.',
+        lanes: ['comercial','gerencia','bayer','admin'],
+        nodes: [
+          {id:'vdir',   type:'document', title:'Registro de VD',       code:'VDIR',   lane:'comercial', pos:'com', y:1},
+          {id:'gwac',   type:'gateway',  title:'¿Aut. acuerdo?',       lane:'gerencia',                  y:2},
+          {id:'facbay', type:'document', title:'Factura Bayer',        code:'FACBAY', lane:'bayer',     pos:'con', y:3},
+          {id:'faccom', type:'document', title:'Factura de Comisión',  code:'FACCOM', lane:'admin',     pos:'con', y:4},
+          {id:'end',    type:'end',      title:'VD finalizada',        lane:'admin',                     y:5},
+        ],
+        flows: [
+          {from:'vdir',   to:'gwac'},
+          {from:'gwac',   to:'vdir',   label:'No', exception:true},
+          {from:'gwac',   to:'facbay', label:'Sí'},
+          {from:'facbay', to:'faccom'},
+          {from:'faccom', to:'end'},
+        ],
+        states: [
+          {docId:'vdir',   label:'Registro de VD',      color:'#2E7A63', items:[{n:1, name:'Pendiente de autorización', badges:['M','A']},{n:2, name:'Acuerdo autorizado', badges:['RevAut']}]},
+          {docId:'facbay', label:'Factura Bayer',        color:'#9B7A5F', items:[{n:3, name:'FAC Bayer registrada'}]},
+          {docId:'faccom', label:'Factura de Comisión',  color:'#3A5A6C', items:[{n:4, name:'Comisión facturada · VD cerrada'}]},
+        ],
+        note:'Bayer factura directamente al cliente final. Lartirigoyen registra el acuerdo, lo autoriza, recibe la Factura Bayer y emite su propia Factura de Comisión.',
+      },
+      {
+        id: 'd2', name: 'Rechazo del acuerdo', type: 'excepcion',
+        desc: 'El acuerdo de VD no se autoriza. Puede modificarse y reintentar.',
+        lanes: ['comercial','gerencia'],
+        nodes: [
+          {id:'vdir', type:'document', title:'Registro de VD',     code:'VDIR', lane:'comercial', pos:'com', y:1},
+          {id:'gwac', type:'gateway',  title:'¿Aut. acuerdo?',     lane:'gerencia',               y:2},
+        ],
+        flows: [
+          {from:'vdir', to:'gwac'},
+          {from:'gwac', to:'vdir', label:'No', exception:true},
+        ],
+        states: [
+          {docId:'vdir', label:'Registro de VD', color:'#2E7A63', items:[{n:1, name:'No autorizado', badges:['M','RevRech']}]},
+        ],
+        note:'El acuerdo rechazado vuelve al Registro de VD. Se puede modificar el acuerdo y reingresar a autorización.',
+      },
+      {
+        id: 'd3', name: 'Con operación física en depósito', type: 'variante',
+        desc: 'La mercadería transita por el depósito de Lartirigoyen antes de la facturación.',
+        lanes: ['comercial','gerencia','deposito','bayer','admin'],
+        nodes: [
+          {id:'vdir',   type:'document', title:'Registro de VD',       code:'VDIR',    lane:'comercial', pos:'com', y:1},
+          {id:'gwac',   type:'gateway',  title:'¿Aut. acuerdo?',       lane:'gerencia',                  y:2},
+          {id:'remin',  type:'document', title:'Remito Ingreso',        code:'REM-IN',  lane:'deposito',  pos:'fis', y:3},
+          {id:'remout', type:'document', title:'Remito Egreso',         code:'REM-OUT', lane:'deposito',  pos:'fis', y:4},
+          {id:'facbay', type:'document', title:'Factura Bayer',         code:'FACBAY',  lane:'bayer',     pos:'con', y:5},
+          {id:'faccom', type:'document', title:'Factura de Comisión',   code:'FACCOM',  lane:'admin',     pos:'con', y:6},
+          {id:'end',    type:'end',      title:'VD finalizada',         lane:'admin',                     y:7},
+        ],
+        flows: [
+          {from:'vdir',   to:'gwac'},
+          {from:'gwac',   to:'vdir',   label:'No', exception:true},
+          {from:'gwac',   to:'remin',  label:'Sí'},
+          {from:'remin',  to:'remout'},
+          {from:'remout', to:'facbay'},
+          {from:'facbay', to:'faccom'},
+          {from:'faccom', to:'end'},
+        ],
+        states: [
+          {docId:'vdir',   label:'Registro de VD',     color:'#2E7A63', items:[{n:1, name:'Acuerdo autorizado'}]},
+          {docId:'remin',  label:'Remito Ingreso',      color:'#8B7E3F', items:[{n:2, name:'Mercadería ingresada'}]},
+          {docId:'remout', label:'Remito Egreso',       color:'#8B7E3F', items:[{n:3, name:'Mercadería egresada'}]},
+          {docId:'facbay', label:'Factura Bayer',       color:'#9B7A5F', items:[{n:4, name:'FAC Bayer registrada'}]},
+          {docId:'faccom', label:'Factura de Comisión', color:'#3A5A6C', items:[{n:5, name:'Comisión facturada · VD cerrada'}]},
+        ],
+        note:'Cuando la mercadería transita físicamente por depósito Lartirigoyen, se generan Remito Ingreso y Egreso antes de la facturación Bayer.',
+      },
+    ],
+  },
+];
+
+/* ============================================================
+   localStorage + Supabase
+   ============================================================ */
+const LS_EDITS    = 'larti-v2-edits';
+const LS_OPEN     = 'larti-v2-open';
+const LS_EDITMODE = 'larti-v2-editmode';
+let edits = {};
+let openScenarios = {};
+try { edits = JSON.parse(localStorage.getItem(LS_EDITS) || '{}'); } catch(e){}
+try { openScenarios = JSON.parse(localStorage.getItem(LS_OPEN) || '{}'); } catch(e){}
+
+function saveEditsLocal(){ localStorage.setItem(LS_EDITS, JSON.stringify(edits)); }
+function saveOpenLocal(){  localStorage.setItem(LS_OPEN,  JSON.stringify(openScenarios)); }
+
+async function saveEdits(){
+  saveEditsLocal();
+  if(supa){
+    try {
+      const rows = Object.entries(edits).map(([key,value]) => ({key, value}));
+      if(rows.length) await supa.from(SUPA_TABLE).upsert(rows, {onConflict:'key'});
+    } catch(e){ console.warn('Supabase save failed', e); }
+  }
+}
+
+(async function loadRemoteEdits(){
+  if(!supa) return;
+  try {
+    const {data} = await supa.from(SUPA_TABLE).select('key,value');
+    if(data) data.forEach(r => { edits[r.key] = r.value; });
+  } catch(e){ console.warn('Supabase load failed', e); }
+})();
+
+function t(scope, key, def){
+  const id = `${scope}.${key}`;
+  return edits[id] !== undefined ? edits[id] : def;
+}
+function editable(scope, key, def, tag='span'){
+  const id = `${scope}.${key}`;
+  const val = t(scope, key, def);
+  return `<${tag} data-edit data-edit-id="${id}">${esc(val)}</${tag}>`;
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ============================================================
+   SVG LAYOUT ENGINE
+   ============================================================ */
+const L = {
+  LANE_W:   178,
+  HEADER_H: 40,
+  ROW_H:    116,
+  NODE_W:   148,
+  DOC_H:    64,
+  GW:       28,   // half-size of diamond (total 56×56)
+  END_W:    140,
+  END_H:    36,
+  PAD_TOP:  18,
+  PAD_BTM:  36,
+  CR:       13,   // corner radius for path bends
+};
+
+function getNodeCenter(node, lanes){
+  const li = lanes.indexOf(node.lane);
+  return {
+    cx: li * L.LANE_W + L.LANE_W / 2,
+    cy: L.HEADER_H + L.PAD_TOP + (node.y - 1) * L.ROW_H + L.ROW_H / 2,
+  };
+}
+
+function nodeHW(node){ // half-width for exit point calc
+  if(node.type==='gateway') return L.GW;
+  if(node.type==='end')     return L.END_W/2;
+  return L.NODE_W/2;
+}
+function nodeHH(node){ // half-height
+  if(node.type==='gateway') return L.GW;
+  if(node.type==='end')     return L.END_H/2;
+  return L.DOC_H/2;
+}
+
+function calcFlowPath(fp, tp, fn, tn, isExc){
+  const r = L.CR;
+  const LPAD = 50; // left padding budget (matches SVG viewBox expansion)
+  // Return / exception arrows: route outside left margin
+  if(isExc || tp.cy < fp.cy){
+    const lx1 = fp.cx - nodeHW(fn);
+    const lx2 = tp.cx - nodeHW(tn);
+    const mx  = Math.max(Math.min(lx1, lx2) - 34, -(LPAD - 6));
+    const y1  = fp.cy;
+    const y2  = tp.cy;
+    const d = `M ${lx1} ${y1}` +
+      ` L ${mx+r} ${y1}` +
+      ` Q ${mx} ${y1} ${mx} ${y1-r}` +
+      ` L ${mx} ${y2+r}` +
+      ` Q ${mx} ${y2} ${mx+r} ${y2}` +
+      ` L ${lx2} ${y2}`;
+    return { d, lp:{ x: mx - 12, y: (y1+y2)/2 } };
+  }
+  // Forward arrows
+  const x1 = fp.cx;
+  const y1 = fp.cy + nodeHH(fn);
+  const x2 = tp.cx;
+  const y2 = tp.cy - nodeHH(tn);
+
+  if(Math.abs(x1-x2) < 3){
+    return { d:`M ${x1} ${y1} L ${x2} ${y2}`, lp:{ x:x1+16, y:(y1+y2)/2 } };
+  }
+  const midY = y1 + (y2-y1) * 0.45;
+  const cr = Math.min(r, Math.abs(x2-x1)/2, Math.abs(y2-y1)/2);
+  const sx = x2 > x1 ? 1 : -1;
+  const d = `M ${x1} ${y1}` +
+    ` L ${x1} ${midY-cr}` +
+    ` Q ${x1} ${midY} ${x1+sx*cr} ${midY}` +
+    ` L ${x2-sx*cr} ${midY}` +
+    ` Q ${x2} ${midY} ${x2} ${midY+cr}` +
+    ` L ${x2} ${y2}`;
+  return { d, lp:{ x:(x1+x2)/2, y:midY-7 } };
+}
+
+function wrapSVGText(text, maxChars){
+  if(text.length <= maxChars) return [text];
+  const mid = Math.floor(text.length/2);
+  for(let d=0; d<=mid; d++){
+    if(text[mid-d]===' ') return [text.substring(0,mid-d), text.substring(mid-d+1)];
+    if(text[mid+d]===' ') return [text.substring(0,mid+d), text.substring(mid+d+1)];
+  }
+  return [text];
+}
+
+function roundedDiamond(cx, cy, s){
+  const c = 3.5;
+  return `M ${cx} ${cy-s+c}` +
+    ` Q ${cx} ${cy-s} ${cx+c} ${cy-s+c}` +
+    ` L ${cx+s-c} ${cy-c}` +
+    ` Q ${cx+s} ${cy} ${cx+s-c} ${cy+c}` +
+    ` L ${cx+c} ${cy+s-c}` +
+    ` Q ${cx} ${cy+s} ${cx-c} ${cy+s-c}` +
+    ` L ${cx-s+c} ${cy+c}` +
+    ` Q ${cx-s} ${cy} ${cx-s+c} ${cy-c}` +
+    ` Z`;
+}
+
+function renderNodeSVG(node, p, scnId){
+  const {cx,cy} = p;
+  const sec = SECTORS[node.lane] || {color:'#71717A'};
+  const sc  = sec.color;
+  const pos = node.pos ? POS[node.pos] : null;
+
+  if(node.type==='gateway'){
+    const s = L.GW;
+    const dp = roundedDiamond(cx, cy, s);
+    const lines = wrapSVGText(node.title, 10);
+    let txt = '';
+    if(lines.length===1){
+      txt = `<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="9.5" font-weight="600" fill="#18181B">${esc(lines[0])}</text>`;
+    } else {
+      txt = `<text text-anchor="middle" font-size="9.5" font-weight="600" fill="#18181B">` +
+        `<tspan x="${cx}" y="${cy-5}">${esc(lines[0])}</tspan>` +
+        `<tspan x="${cx}" dy="13">${esc(lines[1])}</tspan>` +
+        `</text>`;
+    }
+    return `<g class="node-g" data-node="${node.id}" data-scn="${scnId}" style="cursor:pointer">` +
+      `<path d="${dp}" fill="#F5EEDC" stroke="#B08D3F" stroke-width="1.5"/>` +
+      txt + `</g>`;
+  }
+
+  if(node.type==='end'){
+    const hw = L.END_W/2, hh = L.END_H/2;
+    const fill = node.exception ? '#B54A3C' : '#1E5F4A';
+    return `<g class="node-g" data-node="${node.id}" data-scn="${scnId}">` +
+      `<rect x="${cx-hw}" y="${cy-hh}" width="${L.END_W}" height="${L.END_H}" rx="${hh}" fill="${fill}"/>` +
+      `<text x="${cx}" y="${cy+4.5}" text-anchor="middle" font-size="11" font-weight="700" fill="white" letter-spacing="0.01em">${esc(node.title)}</text>` +
+      `</g>`;
+  }
+
+  if(node.type==='state'){
+    const hw = L.NODE_W/2, hh = L.DOC_H/2;
+    const lines = wrapSVGText(node.title, 17);
+    let txt = '';
+    if(lines.length===1){
+      txt = `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="11.5" font-weight="500" fill="#71717A">${esc(lines[0])}</text>`;
+    } else {
+      txt = `<text text-anchor="middle" font-size="11.5" font-weight="500" fill="#71717A">` +
+        `<tspan x="${cx}" y="${cy-10}">${esc(lines[0])}</tspan>` +
+        `<tspan x="${cx}" dy="14">${esc(lines[1])}</tspan>` +
+        `</text>`;
+    }
+    return `<g class="node-g" data-node="${node.id}" data-scn="${scnId}" style="cursor:pointer">` +
+      `<rect x="${cx-hw}" y="${cy-hh}" width="${L.NODE_W}" height="${L.DOC_H}" rx="10" fill="#FAFAFA" stroke="#D4D4D8" stroke-width="1.5" stroke-dasharray="5,3"/>` +
+      txt +
+      `<text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="9" fill="#A1A1AA">estado anterior</text>` +
+      `</g>`;
+  }
+
+  // Document node
+  const hw = L.NODE_W/2, hh = L.DOC_H/2;
+  const lines = wrapSVGText(node.title, 17);
+  let titleSVG = '';
+  if(lines.length===1){
+    const yOff = node.code ? cy-8 : cy+4;
+    titleSVG = `<text x="${cx}" y="${yOff}" text-anchor="middle" font-size="12" font-weight="600" fill="#18181B">${esc(lines[0])}</text>`;
+  } else {
+    const baseY = node.code ? cy-16 : cy-4;
+    titleSVG = `<text text-anchor="middle" font-size="12" font-weight="600" fill="#18181B">` +
+      `<tspan x="${cx}" y="${baseY}">${esc(lines[0])}</tspan>` +
+      `<tspan x="${cx}" dy="14">${esc(lines[1])}</tspan>` +
+      `</text>`;
+  }
+  const codeSVG = node.code
+    ? `<text x="${cx}" y="${cy+20}" text-anchor="middle" font-size="9.5" fill="#71717A" font-family="Courier New,monospace" letter-spacing="0.04em">[${esc(node.code)}]</text>`
+    : '';
+  const posBadge = pos
+    ? `<circle cx="${cx+hw-13}" cy="${cy-hh+13}" r="10" fill="${pos.bg}"/>` +
+      `<text x="${cx+hw-13}" y="${cy-hh+17}" text-anchor="middle" font-size="9" font-weight="700" fill="${pos.ink}">${node.pos[0].toUpperCase()}</text>`
+    : '';
+  return `<g class="node-g" data-node="${node.id}" data-scn="${scnId}" style="cursor:pointer">` +
+    `<rect x="${cx-hw}" y="${cy-hh}" width="${L.NODE_W}" height="${L.DOC_H}" rx="10" fill="white" stroke="${sc}" stroke-width="1.5"/>` +
+    titleSVG + codeSVG + posBadge +
+    `</g>`;
+}
+
+function renderDiagramSVG(scn){
+  const lanes = scn.lanes;
+  const LPAD = 50; // left space for return arrows
+  const W = lanes.length * L.LANE_W;
+  const maxY = Math.max(...scn.nodes.map(n=>n.y));
+  const H = L.HEADER_H + L.PAD_TOP + maxY * L.ROW_H + L.PAD_BTM;
+  const totalW = W + LPAD;
+
+  const nodeMap = {};
+  scn.nodes.forEach(n => { nodeMap[n.id] = n; });
+  const pos = {};
+  scn.nodes.forEach(n => { pos[n.id] = getNodeCenter(n, lanes); });
+
+  const mid = `arr-${scn.id}`;
+  const exc = `arr-exc-${scn.id}`;
+
+  let s = `<svg viewBox="-${LPAD} 0 ${totalW} ${H}" width="${totalW}" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter,-apple-system,sans-serif">`;
+  // Left-pad background (white, behind return arrows)
+  s += `<rect x="-${LPAD}" y="0" width="${LPAD}" height="${H}" fill="#FAFAFA"/>`;
+  s += `<defs>` +
+    `<marker id="${mid}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">` +
+    `<path d="M0,1.5 L8.5,5 L0,8.5 L2,5 Z" fill="#3F3F46"/></marker>` +
+    `<marker id="${exc}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">` +
+    `<path d="M0,1.5 L8.5,5 L0,8.5 L2,5 Z" fill="#B54A3C"/></marker>` +
+    `</defs>`;
+
+  // Lane backgrounds + headers
+  for(let i=0; i<lanes.length; i++){
+    const lk = lanes[i];
+    const sec = SECTORS[lk] || {label:lk, color:'#71717A'};
+    const x = i * L.LANE_W;
+    const bg = i%2===0 ? '#FFFFFF' : '#FAFAFA';
+    s += `<rect x="${x}" y="0" width="${L.LANE_W}" height="${H}" fill="${bg}"/>`;
+    if(i>0) s += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="#E4E4E7" stroke-width="1"/>`;
+    // Header bar
+    s += `<rect x="${x}" y="0" width="${L.LANE_W}" height="${L.HEADER_H}" fill="${bg}"/>`;
+    s += `<line x1="${x+5}" y1="10" x2="${x+5}" y2="${L.HEADER_H-8}" stroke="${sec.color}" stroke-width="3" stroke-linecap="round"/>`;
+    s += `<text x="${x+17}" y="${L.HEADER_H/2+4}" font-size="9.5" font-weight="700" fill="${sec.color}" letter-spacing="0.07">${esc(sec.label.toUpperCase())}</text>`;
+    s += `<line x1="${x}" y1="${L.HEADER_H}" x2="${x+L.LANE_W}" y2="${L.HEADER_H}" stroke="#E4E4E7" stroke-width="1"/>`;
+  }
+
+  // Flows (behind nodes)
+  scn.flows.forEach(f => {
+    const fn = nodeMap[f.from], tn = nodeMap[f.to];
+    if(!fn || !tn) return;
+    const fp = pos[f.from], tp = pos[f.to];
+    const isExc = !!f.exception;
+    const {d, lp} = calcFlowPath(fp, tp, fn, tn, isExc);
+    const stroke  = isExc ? '#B54A3C' : '#3F3F46';
+    const dash    = isExc ? '5,3' : 'none';
+    const marker  = isExc ? `url(#${exc})` : `url(#${mid})`;
+    s += `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="${dash}" stroke-linecap="round" stroke-linejoin="round" marker-end="${marker}"/>`;
+    if(f.label){
+      const col = isExc ? '#B54A3C' : '#71717A';
+      s += `<text x="${lp.x}" y="${lp.y}" font-size="10" font-weight="600" fill="${col}" text-anchor="middle">${esc(f.label)}</text>`;
+    }
+  });
+
+  // Nodes (on top)
+  scn.nodes.forEach(n => { s += renderNodeSVG(n, pos[n.id], scn.id); });
+
+  s += `</svg>`;
+  return s;
+}
+
+/* ============================================================
+   STATES BAND
+   ============================================================ */
+function renderStatesBand(scn){
+  if(!scn.states || !scn.states.length) return '';
+  let html = `<div class="states-band">`;
+  html += `<div class="sb-header">Estado del documento en Algoritmo</div>`;
+  html += `<div class="sb-groups">`;
+  scn.states.forEach(sg => {
+    html += `<div class="sb-group">`;
+    html += `<div class="sb-group-label" style="color:${esc(sg.color)}">${esc(sg.label)}</div>`;
+    html += `<div class="sb-chips">`;
+    sg.items.forEach(it => {
+      html += `<div class="sb-chip">`;
+      html += `<div class="num" style="color:${esc(sg.color)}">${it.n}</div>`;
+      html += `<div class="state-name">${esc(it.name)}</div>`;
+      if(it.badges && it.badges.length){
+        html += `<div class="sb-badges">`;
+        it.badges.forEach(b => {
+          const lbl = META_ACTIONS[b] || b;
+          html += `<span class="sb-badge" title="${esc(lbl)}">${esc(b)}</span>`;
+        });
+        html += `</div>`;
+      }
+      html += `</div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+/* ============================================================
+   RENDER ENGINE
+   ============================================================ */
+function renderAll(){
+  renderOverview();
+  TRAMITES.forEach(tr => renderProcess(tr));
+}
+
+function renderOverview(){
+  // Sector legend
+  const legendEl = document.getElementById('legend-sectors');
+  if(legendEl){
+    legendEl.innerHTML = Object.entries(SECTORS).map(([k,v]) =>
+      `<span class="chip"><span class="sw" style="background:${esc(v.color)};"></span> ${esc(v.label)}</span>`
+    ).join('');
+  }
+  // Overview cards
+  const grid = document.getElementById('ov-grid');
+  if(grid){
+    grid.innerHTML = TRAMITES.map(tr => {
+      const principal = tr.scenarios.find(s=>s.type==='principal');
+      const nNodes = principal ? principal.nodes.filter(n=>n.type==='document').length : 0;
+      return `<div class="ov-card">
+        <h3>${esc(tr.name)}</h3>
+        <p class="lead">${esc(tr.desc)}</p>
+        <div class="stats">
+          <div class="kpi"><div class="v">${tr.scenarios.length}</div><div class="l">Escenarios</div></div>
+          <div class="kpi"><div class="v">${nNodes}</div><div class="l">Docs principales</div></div>
+        </div>
+        <button class="ov-btn" onclick="goView('${tr.id}')">Abrir diagramas →</button>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderProcess(tr){
+  const root = document.getElementById('v-' + tr.id);
+  if(!root) return;
+  const scope = 'tr-' + tr.id;
+  root.innerHTML = `
+    <div class="page-head">
+      <div class="eyebrow">TRÁMITE · ${esc(tr.id.toUpperCase())}</div>
+      <h1>${editable(scope, 'name', tr.name)}</h1>
+      <p class="desc">${editable(scope, 'desc', tr.desc)}</p>
+      <div class="meta">
+        <span><b>${tr.scenarios.length}</b> escenarios documentados</span>
+        <span><b>${tr.scenarios[0].lanes.length}</b> sectores en el escenario principal</span>
+        <span>Tocá <b>+</b> para desplegar cada escenario</span>
+      </div>
+    </div>
+    <div class="scenarios" id="scn-list-${tr.id}">
+      ${tr.scenarios.map((s,i) => renderScenarioCard(tr.id, s, i+1)).join('')}
+    </div>`;
+  attachEditables(root);
+  // Restore open states & open principal by default on first load
+  tr.scenarios.forEach(s => {
+    const key = `${tr.id}.${s.id}`;
+    const shouldOpen = openScenarios[key] !== undefined ? openScenarios[key] : (s.type === 'principal');
+    if(shouldOpen) openScenario(tr.id, s.id);
+  });
+}
+
+function renderScenarioCard(trId, scn, idx){
+  const scope = `${trId}.${scn.id}`;
+  const tagClass = scn.type === 'principal' ? 'principal' : scn.type === 'excepcion' ? 'excepcion' : '';
+  const tagLabel = scn.type === 'principal' ? 'Principal' : scn.type === 'excepcion' ? 'Excepción' : 'Variante';
+  const docCount = scn.nodes.filter(n=>n.type==='document').length;
+  return `<div class="scenario" data-scn="${scn.id}" data-trid="${trId}">
+    <div class="scn-header" onclick="toggleScenario('${trId}','${scn.id}')">
+      <div class="scn-toggle">+</div>
+      <div class="scn-info">
+        <div class="scn-idx">Escenario ${idx}</div>
+        <div class="scn-name">${editable(scope,'name',scn.name)}</div>
+        <div class="scn-desc-short">${editable(scope,'desc',scn.desc)}</div>
+      </div>
+      <div class="scn-right">
+        <div class="scn-tags">
+          <span class="scn-tag ${tagClass}">${tagLabel}</span>
+        </div>
+        <div class="scn-node-count">${docCount} docs</div>
+      </div>
+    </div>
+    <div class="scn-body" id="body-${trId}-${scn.id}"></div>
+  </div>`;
+}
+
+function openScenario(trId, scnId){
+  const card = document.querySelector(`[data-trid="${trId}"][data-scn="${scnId}"]`);
+  if(!card) return;
+  card.classList.add('open');
+  card.querySelector('.scn-toggle').textContent = '+';
+  const body = document.getElementById(`body-${trId}-${scnId}`);
+  if(!body || body.dataset.rendered) return;
+
+  const tr  = TRAMITES.find(t => t.id === trId);
+  const scn = tr && tr.scenarios.find(s => s.id === scnId);
+  if(!scn) return;
+  const scope = `${trId}.${scnId}`;
+
+  let html = '';
+  html += `<div class="diagram-wrap" id="dgwrap-${trId}-${scnId}">`;
+  html += renderDiagramSVG(scn);
+  html += `</div>`;
+  if(scn.note){
+    html += `<div class="notes-block"><b>Nota:</b> ${scn.note}</div>`;
+  }
+  html += renderStatesBand(scn);
+  body.innerHTML = html;
+  body.dataset.rendered = '1';
+
+  // Attach node click via delegation
+  const dgWrap = body.querySelector('.diagram-wrap');
+  if(dgWrap){
+    dgWrap.addEventListener('click', e => {
+      if(document.body.classList.contains('edit-on')) return;
+      const g = e.target.closest('[data-node]');
+      if(!g) return;
+      openNodeDetail(g, g.dataset.node, g.dataset.scn);
+    });
+  }
+  attachEditables(body);
+}
+
+function toggleScenario(trId, scnId){
+  const card = document.querySelector(`[data-trid="${trId}"][data-scn="${scnId}"]`);
+  if(!card) return;
+  const isOpen = card.classList.toggle('open');
+  openScenarios[`${trId}.${scnId}`] = isOpen;
+  saveOpenLocal();
+  if(isOpen) openScenario(trId, scnId);
+}
+
+/* ============================================================
+   DETAIL PANEL
+   ============================================================ */
+function openNodeDetail(g, nodeId, scnId){
+  const tr = TRAMITES.find(t => t.scenarios.some(s => s.id === scnId));
+  if(!tr) return;
+  const scn  = tr.scenarios.find(s => s.id === scnId);
+  const node = scn && scn.nodes.find(n => n.id === nodeId);
+  if(!node) return;
+
+  const typeLabels = { document:'Documento', gateway:'Decisión (autorización)', end:'Cierre de trámite', state:'Estado previo' };
+  document.getElementById('dp-eyebrow').textContent = typeLabels[node.type] || 'Nodo';
+  document.getElementById('dp-title').textContent   = node.title + (node.code ? ` [${node.code}]` : '');
+  document.getElementById('dp-sector').textContent  = SECTORS[node.lane]?.label || node.lane;
+  document.getElementById('dp-type').textContent    = typeLabels[node.type] || node.type;
+  document.getElementById('dp-pos').textContent     = node.pos ? (POS[node.pos]?.label || node.pos) : '—';
+  document.getElementById('dp-code').textContent    = node.code || '—';
+
+  const descEl = document.getElementById('dp-desc');
+  const stateGroup = scn.states && scn.states.find(sg => sg.docId === nodeId);
+  if(stateGroup && stateGroup.items.length){
+    descEl.style.display = 'block';
+    descEl.innerHTML = '<b>Estados posibles:</b> ' + stateGroup.items.map(it => it.name).join(' · ');
+  } else {
+    descEl.style.display = 'none';
+  }
+
+  const panel = document.getElementById('detail-panel');
+  panel.classList.add('open');
+  const rect = g.getBoundingClientRect();
+  const pw = 344, ph = 260;
+  let left = rect.right + 14;
+  if(left + pw > window.innerWidth - 12) left = rect.left - pw - 14;
+  if(left < 12) left = 12;
+  let top = rect.top;
+  if(top + ph > window.innerHeight - 12) top = window.innerHeight - ph - 12;
+  if(top < 12) top = 12;
+  panel.style.left = left + 'px';
+  panel.style.top  = top  + 'px';
+}
+
+function closeDetail(){ document.getElementById('detail-panel').classList.remove('open'); }
+document.addEventListener('click', e => {
+  const p = document.getElementById('detail-panel');
+  if(!p.classList.contains('open')) return;
+  if(e.target.closest('.detail-panel') || e.target.closest('[data-node]')) return;
+  closeDetail();
+});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function goView(key){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const v = document.getElementById('v-' + key);
+  if(v) v.classList.add('active');
+  const btn = document.querySelector(`.tab-btn[data-view="${key}"]`);
+  if(btn) btn.classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(b => {
+  b.addEventListener('click', () => goView(b.dataset.view));
+});
+
+/* ============================================================
+   EDIT MODE
+   ============================================================ */
+const PW = 'simpleza';
+
+document.getElementById('btn-edit').addEventListener('click', () => {
+  document.body.classList.contains('edit-on') ? exitEdit() : openPw();
+});
+function openPw(){
+  document.getElementById('pw-mask').classList.add('open');
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-err').innerHTML = '&nbsp;';
+  setTimeout(() => document.getElementById('pw-input').focus(), 60);
+}
+function closePw(){ document.getElementById('pw-mask').classList.remove('open'); }
+function submitPw(){
+  if(document.getElementById('pw-input').value === PW){
+    closePw(); enterEdit();
+  } else {
+    document.getElementById('pw-err').textContent = 'Contraseña incorrecta.';
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if(e.key==='Enter')  submitPw();
+  if(e.key==='Escape') closePw();
+});
+
+function enterEdit(){
+  document.body.classList.add('edit-on');
+  document.getElementById('edit-indicator').classList.add('on');
+  document.getElementById('edit-indicator').textContent = 'Edición';
+  document.getElementById('btn-edit').classList.add('on');
+  document.getElementById('btn-edit').textContent = 'Salir de edición';
+  localStorage.setItem(LS_EDITMODE, '1');
+  attachEditables(document);
+}
+function exitEdit(){
+  document.body.classList.remove('edit-on');
+  document.getElementById('edit-indicator').classList.remove('on');
+  document.getElementById('edit-indicator').textContent = 'Lectura';
+  document.getElementById('btn-edit').classList.remove('on');
+  document.getElementById('btn-edit').textContent = 'Editar';
+  localStorage.setItem(LS_EDITMODE, '0');
+  document.querySelectorAll('[data-edit][contenteditable]').forEach(el => {
+    el.removeAttribute('contenteditable');
+    el.removeEventListener('blur', onEditBlur);
+  });
+}
+
+function attachEditables(scope){
+  if(!document.body.classList.contains('edit-on')) return;
+  scope.querySelectorAll('[data-edit]').forEach(el => {
+    if(el.getAttribute('contenteditable') === 'true') return;
+    el.setAttribute('contenteditable', 'true');
+    el.addEventListener('blur', onEditBlur);
+    el.addEventListener('keydown', e => {
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+      if(e.key==='Escape'){ el.blur(); }
+    });
+    el.addEventListener('click', e => { if(document.body.classList.contains('edit-on')) e.stopPropagation(); });
+  });
+}
+function onEditBlur(e){
+  const el = e.target;
+  const id = el.dataset.editId;
+  if(!id) return;
+  edits[id] = el.innerText.trim();
+  saveEdits();
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderAll();
+
+if(localStorage.getItem(LS_EDITMODE) === '1') enterEdit();
+
+window.addEventListener('resize', () => {
+  // SVGs are fixed-size; no reflow needed for this layout
+});
+</script>
+</body>
+</html>
