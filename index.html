@@ -1,0 +1,2804 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lartirigoyen × Algoritmo — Documentación de trámites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --sz-cream:      #F9F4ED;
+  --sz-cream-2:    #FCF8F1;
+  --sz-beige:      #D9CCC1;
+  --sz-beige-2:    #ECE2D6;
+  --sz-green:      #32E8A9;
+  --sz-green-tint: #E7F9F0;
+  --sz-yellow:     #F7DC6F;
+  --sz-yellow-tint:#FDF5D4;
+  --sz-terracota:  #CD6155;
+  --sz-terracota-tint: #F7E2DE;
+  --sz-terracota-edge: #E9B4AC;
+  --sz-teal:       #6C868C;
+  --sz-teal-tint:  #E9EEEF;
+  --sz-teal-edge:  #B8C3C3;
+  --sz-ink-900:    #1E2A2C;
+  --sz-ink-800:    #2C3A3C;
+  --sz-ink-700:    #3F5254;
+  --sz-ink-600:    #616A6B;
+  --sz-gray:       #7F7F7F;
+
+  --sector-comercial: #7FBFAE;
+  --sector-gerencia:  var(--sz-teal);
+  --sector-deposito:  var(--sz-yellow);
+  --sector-admin:     var(--sz-beige);
+  --sector-finanzas:  var(--sz-gray);
+
+  --pos-com: var(--sz-green);   --pos-com-ink: #04342C;
+  --pos-fis: var(--sz-yellow);  --pos-fis-ink: #5E4A0B;
+  --pos-con: var(--sz-teal);    --pos-con-ink: #FFFFFF;
+
+  --meta-mod-bg:   var(--sz-green-tint);   --meta-mod-ink: #04342C;   --meta-mod: var(--sz-green);
+  --meta-anu:      var(--sz-terracota);
+  --meta-rev-bg:   var(--sz-yellow-tint);  --meta-rev-ink: #5E4A0B;
+
+  --font-sans: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin:0; padding:0; }
+body{
+  font-family: var(--font-sans);
+  font-size: 13px; font-weight: 300; line-height: 1.55;
+  color: var(--sz-ink-800);
+  background: var(--sz-cream);
+  -webkit-font-smoothing: antialiased;
+}
+button{ font-family: inherit; }
+
+/* TOPBAR */
+.topbar{
+  position: sticky; top: 0; z-index: 50;
+  background: var(--sz-ink-900); color: #fff;
+  display: flex; align-items: center; gap: 18px;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.topbar .brand{ display: flex; align-items: center; gap: 14px; }
+.topbar .logo{ height: 26px; display: block; opacity: .95; }
+.topbar .brand .sep{ width: 1px; height: 22px; background: rgba(255,255,255,.18); }
+.topbar .brand .client{ font-weight: 500; font-size: 13px; color: rgba(255,255,255,.92); }
+.topbar .brand .client small{ font-weight: 300; opacity: .55; margin-left: 6px; }
+
+.topbar nav{ display: flex; gap: 4px; margin-left: 20px; }
+.topbar nav button{
+  background: transparent; color: rgba(255,255,255,.72);
+  border: 0; padding: 7px 14px; border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500; cursor: pointer;
+}
+.topbar nav button:hover{ background: rgba(255,255,255,.08); color: #fff; }
+.topbar nav button.active{ background: var(--sz-green); color: var(--sz-ink-900); font-weight: 600; }
+.topbar .spacer{ flex: 1; }
+.topbar .edit-state{
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
+  padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.65);
+}
+.topbar .edit-state.on{ background: var(--sz-green); color: var(--sz-ink-900); border-color: transparent; }
+.topbar .btn-edit{
+  background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.14);
+  padding: 7px 14px; border-radius: var(--r-sm); font-size: 12px; font-weight: 500; cursor: pointer;
+}
+.topbar .btn-edit:hover{ background: rgba(255,255,255,.14); }
+.topbar .btn-edit.on{ background: var(--sz-green); color: var(--sz-ink-900); border-color: transparent; }
+
+.edit-banner{
+  display: none; background: var(--sz-green-tint); border-bottom: 1px solid var(--sz-green);
+  padding: 9px 48px; font-size: 11px; color: #0A5A3E; font-weight: 500;
+}
+body.is-editing .edit-banner{ display: block; }
+
+/* TRAMITE */
+.tramite{ display: none; }
+.tramite.active{ display: block; }
+
+.tramite-head{
+  padding: 32px 48px 22px; border-bottom: 1px solid var(--sz-beige);
+  background: var(--sz-cream);
+}
+.tramite-head .eyebrow{
+  font-size: 10px; font-weight: 700; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--sz-teal);
+}
+.tramite-head h1{
+  font-size: 30px; font-weight: 700; margin: 6px 0 4px;
+  letter-spacing: -.015em; color: var(--sz-ink-900);
+}
+.tramite-head p{
+  color: var(--sz-ink-700); font-weight: 300;
+  margin: 0; max-width: 920px;
+}
+.tramite-head .tramite-meta{
+  display: flex; gap: 22px; margin-top: 12px; font-size: 11px;
+  color: var(--sz-ink-600); flex-wrap: wrap;
+}
+.tramite-head .tramite-meta b{ color: var(--sz-ink-900); font-weight: 600; }
+
+/* SCENARIOS */
+.scenarios{ padding: 18px 48px 48px; display: flex; flex-direction: column; gap: 10px; }
+
+.scenario{
+  background: #fff;
+  border: 1px solid var(--sz-beige);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.scenario.expanded{
+  box-shadow: 0 1px 4px rgba(30,42,44,.04), 0 3px 12px rgba(30,42,44,.04);
+}
+
+.scenario-head{
+  display: grid;
+  grid-template-columns: 110px 1fr 140px 110px 44px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 22px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.scenario-head:hover{ background: var(--sz-cream-2); }
+.scenario.expanded .scenario-head{ border-bottom: 1px solid var(--sz-beige); background: var(--sz-cream-2); }
+
+.scenario-num{
+  font-size: 10px; font-weight: 700; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--sz-teal);
+}
+.scenario-body-head .scenario-name{
+  font-size: 15px; font-weight: 600; color: var(--sz-ink-900);
+  letter-spacing: -.01em;
+}
+.scenario-body-head .scenario-desc{
+  font-size: 11.5px; color: var(--sz-ink-600); margin-top: 2px;
+}
+.scenario-tag{
+  font-size: 10px; font-weight: 700; letter-spacing: .05em;
+  padding: 4px 10px; border-radius: 99px; text-align: center;
+  justify-self: center;
+}
+.scenario-tag.tag-principal{ background: var(--sz-green-tint); color: #0A5A3E; }
+.scenario-tag.tag-variante{ background: var(--sz-yellow-tint); color: #5E4A0B; }
+.scenario-tag.tag-excepcion{ background: var(--sz-terracota-tint); color: var(--sz-terracota); }
+.scenario-tag.tag-ctayorden{ background: var(--sz-beige-2); color: var(--sz-ink-800); }
+.scenario-tag.tag-devolucion{ background: var(--sz-terracota-tint); color: var(--sz-terracota); }
+.scenario-tag.tag-logistica{ background: #E6EBE6; color: #3F5254; }
+
+.scenario-steps{ font-size: 11px; color: var(--sz-teal); text-align: right; }
+.scenario-toggle{
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid var(--sz-beige);
+  background: #fff; cursor: pointer;
+  font-size: 18px; font-weight: 600; line-height: 1;
+  color: var(--sz-ink-700);
+  transition: transform .2s, background .2s;
+}
+.scenario.expanded .scenario-toggle{ background: var(--sz-ink-900); color: #fff; border-color: var(--sz-ink-900); transform: rotate(45deg); }
+
+.scenario-body{
+  max-height: 0; overflow: hidden;
+  transition: max-height .3s ease;
+}
+.scenario.expanded .scenario-body{ max-height: 2400px; }
+.scenario-diagram{
+  padding: 20px 22px 16px; overflow-x: auto;
+  background: var(--sz-cream-2);
+}
+.scenario-diagram svg{ display: block; min-width: 1400px; }
+
+/* Meta y notas del escenario */
+.scenario-meta{
+  padding: 14px 22px;
+  border-top: 1px dashed var(--sz-beige);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.scenario-meta-label{
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .11em; color: var(--sz-teal);
+}
+.scenario-meta-chips{ display: flex; gap: 10px; flex-wrap: wrap; }
+.meta-mini{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px 4px 4px; border-radius: 99px;
+  background: #fff; border: 1px solid var(--sz-beige);
+  font-size: 11px; font-weight: 500; color: var(--sz-ink-800);
+  cursor: pointer; transition: border-color .18s, background .18s;
+}
+.meta-mini:hover{ border-color: var(--sz-teal-edge); background: var(--sz-cream-2); }
+.meta-mini-ico{
+  width: 20px; height: 20px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; border: 1px solid;
+}
+.scenario-notes{
+  padding: 14px 22px; font-size: 12px; color: var(--sz-ink-700);
+  border-top: 1px dashed var(--sz-beige); background: #fff;
+}
+.scenario-notes-label{
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .11em; color: var(--sz-teal); margin-bottom: 6px;
+}
+.scenario-notes p{ margin: 0; line-height: 1.55; }
+.scenario-notes ul{ margin: 0; padding-left: 18px; }
+.scenario-notes li{ line-height: 1.55; margin-bottom: 4px; }
+.scenario-notes b{ color: var(--sz-ink-900); font-weight: 600; }
+
+/* SVG */
+svg text{ font-family: var(--font-sans); }
+.lane-bg.odd  { fill: #FFFFFF; }
+.lane-bg.even { fill: var(--sz-cream-2); }
+.lane-bg.external{ fill: #F4F0E9; }
+.lane-label{
+  fill: var(--sz-teal); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .11em; text-transform: uppercase;
+}
+.lane-divider{ stroke: var(--sz-beige); stroke-width: .5; }
+
+.node-rect{
+  fill: #fff; stroke: var(--sz-ink-700); stroke-width: 1;
+  filter: drop-shadow(0 1px 2px rgba(30,42,44,.07));
+  cursor: pointer;
+  transition: stroke .15s, fill .15s;
+}
+.node-rect:hover{ fill: var(--sz-cream-2); stroke: var(--sz-ink-900); }
+.node-rect.exception{ stroke: var(--sz-terracota); stroke-dasharray: 5 3; }
+.node-title{ fill: var(--sz-ink-900); font-size: 11.5px; font-weight: 600; pointer-events: none; }
+.node-code{ fill: var(--sz-teal); font-size: 9.5px; font-weight: 400; letter-spacing: .04em; pointer-events: none; }
+
+.gw-diamond{
+  fill: var(--sz-yellow-tint); stroke: #C8A73D; stroke-width: 1;
+  stroke-linejoin: round; cursor: pointer;
+  transition: fill .15s;
+}
+.gw-diamond:hover{ fill: #FAEDB0; }
+.gw-label{ fill: #5E4A0B; font-size: 10.5px; font-weight: 600; pointer-events: none; }
+
+.start-event{ fill: #fff; stroke: var(--sz-ink-700); stroke-width: 2; }
+.start-label{ fill: var(--sz-ink-800); font-size: 10.5px; font-weight: 500; }
+.start-trigger{ fill: var(--sz-ink-600); font-size: 10px; font-weight: 400; font-style: italic; }
+
+.end-event     { fill: #fff; stroke: var(--sz-ink-700); stroke-width: 2.5; cursor: pointer; }
+.end-event.bad { stroke: var(--sz-terracota); }
+.end-core.bad  { fill: var(--sz-terracota); }
+.end-label     { fill: var(--sz-ink-800); font-size: 10.5px; font-weight: 500; }
+.end-label.bad { fill: var(--sz-terracota); }
+
+.flow-arrow{
+  stroke: var(--sz-ink-700); stroke-width: 1.6; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.flow-arrow.bad{
+  stroke: var(--sz-terracota); stroke-width: 1.4;
+  stroke-dasharray: 5 4; opacity: .9;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.flow-label    { fill: var(--sz-ink-700); font-size: 10px; font-weight: 500; }
+.flow-label.bad{ fill: var(--sz-terracota); }
+
+.pos-chip-g{ cursor: pointer; }
+.pos-chip-circle{ stroke-width: .5; }
+.pos-chip-circle.com{ fill: var(--pos-com); stroke: var(--pos-com-ink); }
+.pos-chip-circle.fis{ fill: var(--pos-fis); stroke: var(--pos-fis-ink); }
+.pos-chip-circle.con{ fill: var(--pos-con); stroke: var(--pos-con-ink); }
+.pos-chip-text{ font-size: 7.5px; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.pos-chip-text.com{ fill: var(--pos-com-ink); }
+.pos-chip-text.fis{ fill: var(--pos-fis-ink); }
+.pos-chip-text.con{ fill: #FFFFFF; }
+
+/* State band */
+.state-band-bg{ fill: var(--sz-teal-tint); stroke: var(--sz-teal-edge); stroke-width: .5; }
+.state-band-head{
+  fill: var(--sz-teal); font-size: 10px; font-weight: 700;
+  letter-spacing: .11em; text-transform: uppercase;
+}
+.state-chip-rect{
+  fill: #fff; stroke: var(--sz-teal-edge); stroke-width: .5;
+  filter: drop-shadow(0 1px 1.5px rgba(108,134,140,.08));
+}
+.state-chip-rect.bad{ fill: #FFF5F3; stroke: var(--sz-terracota-edge); }
+.state-chip-num { fill: var(--sz-teal); font-size: 12px; font-weight: 700; }
+.state-chip-num.bad { fill: var(--sz-terracota); }
+.state-chip-name{ fill: var(--sz-ink-800); font-size: 10px; font-weight: 500; }
+.state-chip-name.sub{ fill: var(--sz-ink-700); font-weight: 400; }
+.state-chip-name.bad{ fill: var(--sz-terracota); }
+
+.state-leader{
+  stroke: var(--sz-teal-edge); stroke-width: 1;
+  stroke-dasharray: 3 4; opacity: .75;
+  stroke-linecap: round;
+}
+.state-leader.bad{ stroke: var(--sz-terracota-edge); opacity: .72; }
+
+/* Meta badges sobre state chips */
+.meta-badge{ cursor: pointer; transition: transform .15s; }
+.meta-badge:hover{ transform: translateY(-1px); }
+.meta-badge circle{ stroke-width: 1; }
+.meta-badge .bg-mod{ fill: var(--meta-mod-bg); stroke: var(--meta-mod); }
+.meta-badge .bg-anu{ fill: var(--meta-anu);     stroke: var(--meta-anu); }
+.meta-badge .bg-rev{ fill: var(--meta-rev-bg); stroke: #C8A73D; }
+.meta-badge text{
+  font-size: 8px; font-weight: 700;
+  text-anchor: middle; dominant-baseline: central;
+  pointer-events: none;
+}
+.meta-badge .t-mod{ fill: var(--meta-mod-ink); }
+.meta-badge .t-anu{ fill: #FFFFFF; }
+.meta-badge .t-rev{ fill: var(--meta-rev-ink); }
+
+/* DETAIL PANEL */
+.detail-panel{
+  position: fixed; width: 340px; z-index: 40;
+  background: #fff; border: 1px solid var(--sz-beige);
+  border-radius: var(--r-md); overflow: hidden;
+  box-shadow: 0 10px 32px rgba(30,42,44,.12), 0 3px 8px rgba(30,42,44,.05);
+  display: none;
+  max-height: calc(100vh - 160px); overflow-y: auto;
+}
+.detail-panel.on{ display: block; }
+.detail-head{
+  padding: 14px 18px 12px; border-bottom: 1px solid var(--sz-beige);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  background: linear-gradient(to bottom, var(--sz-cream-2), #fff);
+}
+.detail-head .dp-title{ font-size: 13px; font-weight: 600; color: var(--sz-ink-900); margin: 0; line-height: 1.3; outline: none; }
+.detail-head .dp-code{ font-size: 10.5px; color: var(--sz-teal); font-weight: 500; margin-top: 3px; letter-spacing: .05em; outline: none; }
+.detail-head button{
+  background: transparent; border: 0; color: var(--sz-teal); cursor: pointer;
+  font-size: 18px; line-height: 1; padding: 0; width: 26px; height: 26px;
+  border-radius: var(--r-xs);
+}
+.detail-head button:hover{ background: var(--sz-beige-2); }
+.detail-body{ padding: 12px 18px 14px; }
+.detail-row{
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 8px 0; font-size: 12px; border-bottom: 1px dashed var(--sz-beige-2); gap: 12px;
+}
+.detail-row:last-child{ border-bottom: 0; }
+.detail-row .k{
+  color: var(--sz-teal); font-weight: 500; font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: .07em; min-width: 98px; flex-shrink: 0;
+}
+.detail-row .v{
+  color: var(--sz-ink-800); font-weight: 400; text-align: right;
+  outline: none; flex: 1; min-width: 0;
+}
+.detail-desc{
+  margin-top: 12px; padding: 11px 13px;
+  background: var(--sz-cream-2); border-radius: var(--r-sm);
+  font-size: 11.5px; color: var(--sz-ink-700); line-height: 1.55; outline: none;
+}
+
+body.is-editing [contenteditable="true"]:hover,
+body.is-editing [contenteditable="true"]:focus{
+  background: var(--sz-green-tint);
+  outline: 1px dashed var(--sz-green) !important;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.detail-actions{
+  display: none; padding: 12px 18px; border-top: 1px solid var(--sz-beige);
+  gap: 8px; justify-content: flex-end; background: var(--sz-cream-2);
+}
+body.is-editing .detail-panel.on .detail-actions{ display: flex; }
+.detail-actions button{
+  padding: 7px 14px; border-radius: var(--r-sm); border: 0;
+  font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer;
+}
+.detail-actions .btn-save{ background: var(--sz-green); color: var(--sz-ink-900); }
+.detail-actions .btn-cancel{ background: var(--sz-beige-2); color: var(--sz-ink-700); }
+
+/* PASSWORD MODAL */
+.modal-bg{
+  display: none; position: fixed; inset: 0;
+  background: rgba(30,42,44,.5); z-index: 300;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-bg.on{ display: flex; }
+.modal{
+  background: #fff; border-radius: var(--r-lg); padding: 30px;
+  width: 340px; text-align: center;
+}
+.modal h3{ font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+.modal p{ font-size: 12px; color: var(--sz-teal); margin: 0 0 18px; }
+.modal input{
+  width: 100%; padding: 11px 14px; border: 1px solid var(--sz-beige);
+  border-radius: var(--r-sm); font-size: 13px; margin-bottom: 14px;
+  font-family: inherit;
+}
+.modal .actions{ display: flex; gap: 8px; justify-content: flex-end; }
+.modal button{
+  padding: 8px 16px; border: 0; border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit;
+}
+.modal .btn-primary{ background: var(--sz-ink-900); color: #fff; }
+.modal .btn-ghost  { background: var(--sz-beige-2); color: var(--sz-ink-800); }
+
+@media (max-width: 720px){
+  .tramite-head, .scenarios, .edit-banner{ padding-left: 20px; padding-right: 20px; }
+  .scenario-head{ grid-template-columns: 1fr 40px; gap: 8px; }
+  .scenario-num, .scenario-tag, .scenario-steps{ display: none; }
+  .detail-panel{ left: 20px; right: 20px; width: auto; top: auto; bottom: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img class="logo" src="data:image/png;base64,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" alt="Simpleza" />
+    <span class="sep"></span>
+    <span class="client">Lartirigoyen <small>× Algoritmo</small></span>
+  </div>
+  <nav>
+          <button class="active" data-tramite="compra" onclick="switchTramite('compra')">Compra de Insumos</button>
+          <button class="" data-tramite="venta" onclick="switchTramite('venta')">Venta de Insumos</button>
+          <button class="" data-tramite="vtadirecta" onclick="switchTramite('vtadirecta')">Venta Directa (Bayer)</button>
+  </nav>
+  <div class="spacer"></div>
+  <span class="edit-state" id="editState">Lectura</span>
+  <button class="btn-edit" id="btnEdit">Editar</button>
+</header>
+
+<div class="edit-banner">
+  Modo edición activo — los cambios quedan guardados localmente en este navegador. Cuando se conecte Firebase se sincronizan automáticamente.
+</div>
+
+
+  <section class="tramite active" id="tramite-compra" data-tramite="compra">
+    <div class="tramite-head">
+      <div class="eyebrow">Compra · trámite</div>
+      <h1>Compra de Insumos</h1>
+      <p>Trámite que inicia al confirmarse una necesidad de insumo y cierra con la factura del proveedor registrada. Se documentan cuatro escenarios según cómo llegan y se procesan los documentos.</p>
+      <div class="tramite-meta">
+        <span><b>4 escenarios documentados</b></span>
+        <span><b>5 áreas involucradas</b></span>
+        <span>Tocá el (+) para desplegar cada escenario</span>
+      </div>
+    </div>
+
+    <div class="scenarios">
+
+      <div class="scenario expanded" data-scenario="c1">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO C1</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Camino feliz: OC → recibir → facturar</div>
+            <div class="scenario-desc">Autorización general, recepción antes de la factura, cierre en estado 5.</div>
+          </div>
+          <div class="scenario-tag tag-principal">Principal</div>
+          <div class="scenario-steps">7 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 580" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg odd" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-finanzas)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Finanzas</text>
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="430" />
+
+  <line class="state-leader" x1="280" y1="112.0" x2="280" y2="450" />
+<line class="state-leader" x1="470" y1="177.0" x2="470" y2="450" />
+<line class="state-leader" x1="680" y1="264.0" x2="680" y2="450" />
+<line class="state-leader" x1="960" y1="340.0" x2="960" y2="450" />
+<line class="state-leader bad" x1="660" y1="170.5" x2="660" y2="450" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 201.0 88.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 359.0 88.0 L 452 88.0 A 18 18 0 0 1 470 106.0 L 470 138.0" marker-end="url(#arrow)" />
+<path class="flow-arrow bad" d="M 522 164.0 L 647 164.0" marker-end="url(#arrow-bad)" />
+    <text class="flow-label bad" x="540" y="156.0">Rechaza</text>
+<path class="flow-arrow" d="M 470 190.0 L 470 222.0 A 18 18 0 0 0 488 240.0 L 601.0 240.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="482" y="238">Sí, autorizo</text>
+<path class="flow-arrow" d="M 759.0 240.0 L 802.0 240.0 A 18 18 0 0 1 820.0 258.0 L 820.0 298.0 A 18 18 0 0 0 838.0 316.0 L 881.0 316.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1039.0 316.0 L 1207 316.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Necesidad de insumo</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">confirmada</text>
+<g class="node" data-node="c1_oc" onclick="openDetail(this)">
+      <rect class="node-rect" x="201.0" y="64.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="280" y="85.0" text-anchor="middle">Registrar OC</text>
+      <text class="node-code" data-sync-field="code" x="280" y="100.0" text-anchor="middle">[OC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="351.0" cy="70.0" r="9" />
+        <text class="pos-chip-text com" x="351.0" y="70.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="c1_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 465 141.0 Q 470 138.0 475 141.0 L 517 161.0 Q 522 164.0 517 167.0 L 475 187.0 Q 470 190.0 465 187.0 L 423 167.0 Q 418 164.0 423 161.0 Z" />
+      <text class="gw-label" x="470" y="159.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="470" y="173.0" text-anchor="middle" dominant-baseline="central">compra?</text>
+    </g>
+<g class="node" data-node="c1_rej" onclick="openDetail(this)">
+      <circle class="end-event bad" cx="660" cy="164.0" r="13" />
+      <circle class="end-core bad" cx="660" cy="164.0" r="6" />
+      <text class="end-label bad" x="660" y="142.0" text-anchor="middle" font-weight="600">Compra rechazada</text>
+    </g>
+<g class="node" data-node="c1_rem" onclick="openDetail(this)">
+      <rect class="node-rect" x="601.0" y="216.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="680" y="237.0" text-anchor="middle">Recibir mercadería</text>
+      <text class="node-code" data-sync-field="code" x="680" y="252.0" text-anchor="middle">[REM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="751.0" cy="222.0" r="9" />
+        <text class="pos-chip-text fis" x="751.0" y="222.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="c1_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="881.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="960" y="313.0" text-anchor="middle">Registrar factura</text>
+      <text class="node-code" data-sync-field="code" x="960" y="328.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1031.0" cy="298.0" r="9" />
+        <text class="pos-chip-text con" x="1031.0" y="298.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="c1_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1220" cy="316.0" r="13" />
+      <text class="end-label" x="1220" y="294.0" text-anchor="middle" font-weight="600">Compra finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="450" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="470">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="215.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="229.0" y="508">1</text>
+      <text class="state-chip-name" x="245.0" y="508">Pendiente</text>
+      <text class="state-chip-name sub" x="229.0" y="526">de autorización</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="327.0" cy="482" r="8" />
+        <text class="t-mod" x="327.0" y="483">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="309.0" cy="482" r="8" />
+        <text class="t-anu" x="309.0" y="483">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="405.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="419.0" y="508">2</text>
+      <text class="state-chip-name" x="435.0" y="508">Compra</text>
+      <text class="state-chip-name sub" x="419.0" y="526">autorizada</text>
+      <g class="meta-badge" data-meta="rev-autorizacion" onclick="event.stopPropagation(); openMeta('rev-autorizacion', this)">
+        <circle class="bg-rev" cx="517.0" cy="482" r="8" />
+        <text class="t-rev" x="517.0" y="483">↺</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="615.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="629.0" y="508">3</text>
+      <text class="state-chip-name" x="645.0" y="508">Recibida</text>
+      <text class="state-chip-name sub" x="629.0" y="526">pend. factura</text>
+    </g>
+    <g class="state-chip-g" data-state="5">
+      <rect class="state-chip-rect" x="895.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="909.0" y="508">5</text>
+      <text class="state-chip-name" x="925.0" y="508">Finalizada</text>
+      <text class="state-chip-name sub" x="909.0" y="526">c/ facturación</text>
+    </g>
+    <g class="state-chip-g" data-state="8">
+      <rect class="state-chip-rect bad" x="595.0" y="542" width="130" height="48" rx="8" />
+      <text class="state-chip-num bad" x="609.0" y="562">8</text>
+      <text class="state-chip-name bad" x="625.0" y="562">Compra</text>
+      <text class="state-chip-name sub bad" x="609.0" y="580">rechazada</text>
+      <g class="meta-badge" data-meta="rev-rechazo" onclick="event.stopPropagation(); openMeta('rev-rechazo', this)">
+        <circle class="bg-rev" cx="707.0" cy="536" r="8" />
+        <text class="t-rev" x="707.0" y="537">↺</text>
+      </g>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span><span class="meta-mini" data-meta="rev-rechazo" onclick="openMeta('rev-rechazo', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Rechazo</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Si la factura llega antes que el remito, el trámite sigue por <b>Camino B (C2)</b> con estados 4 y 6.</li><li>Si la compra es por cuenta y orden, tras FAC se dispara <b>LIQTER en Finanzas (C3)</b>.</li><li>Si tras el cierre se devuelve mercadería, el trámite continúa por <b>Devolución con NC (C4)</b>.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="c2">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO C2</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Camino B: factura antes que remito</div>
+            <div class="scenario-desc">El proveedor factura antes de entregar. Pasa por estados 4 y 6 en lugar de 3 y 5.</div>
+          </div>
+          <div class="scenario-tag tag-variante">Variante</div>
+          <div class="scenario-steps">7 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 504" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg odd" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Administración</text>
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="354" />
+
+  <line class="state-leader" x1="280" y1="112.0" x2="280" y2="374" />
+<line class="state-leader" x1="470" y1="177.0" x2="470" y2="374" />
+<line class="state-leader" x1="700" y1="340.0" x2="700" y2="374" />
+<line class="state-leader" x1="980" y1="264.0" x2="980" y2="374" />
+<line class="state-leader bad" x1="660" y1="170.5" x2="660" y2="374" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 201.0 88.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 359.0 88.0 L 452 88.0 A 18 18 0 0 1 470 106.0 L 470 138.0" marker-end="url(#arrow)" />
+<path class="flow-arrow bad" d="M 522 164.0 L 647 164.0" marker-end="url(#arrow-bad)" />
+    <text class="flow-label bad" x="540" y="178">Rechaza</text>
+<path class="flow-arrow" d="M 470 190.0 L 470 298.0 A 18 18 0 0 0 488 316.0 L 621.0 316.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="482" y="280">Sí, autorizo</text>
+<path class="flow-arrow" d="M 779.0 316.0 L 822.0 316.0 A 18 18 0 0 0 840.0 298.0 L 840.0 258.0 A 18 18 0 0 1 858.0 240.0 L 901.0 240.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1059.0 240.0 L 1207 240.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Necesidad de insumo</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">confirmada</text>
+<g class="node" data-node="c2_oc" onclick="openDetail(this)">
+      <rect class="node-rect" x="201.0" y="64.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="280" y="85.0" text-anchor="middle">Registrar OC</text>
+      <text class="node-code" data-sync-field="code" x="280" y="100.0" text-anchor="middle">[OC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="351.0" cy="70.0" r="9" />
+        <text class="pos-chip-text com" x="351.0" y="70.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="c2_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 465 141.0 Q 470 138.0 475 141.0 L 517 161.0 Q 522 164.0 517 167.0 L 475 187.0 Q 470 190.0 465 187.0 L 423 167.0 Q 418 164.0 423 161.0 Z" />
+      <text class="gw-label" x="470" y="159.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="470" y="173.0" text-anchor="middle" dominant-baseline="central">compra?</text>
+    </g>
+<g class="node" data-node="c2_rej" onclick="openDetail(this)">
+      <circle class="end-event bad" cx="660" cy="164.0" r="13" />
+      <circle class="end-core bad" cx="660" cy="164.0" r="6" />
+      <text class="end-label bad" x="660" y="142.0" text-anchor="middle" font-weight="600">Compra rechazada</text>
+    </g>
+<g class="node" data-node="c2_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="621.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="700" y="313.0" text-anchor="middle">Registrar factura</text>
+      <text class="node-code" data-sync-field="code" x="700" y="328.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="771.0" cy="298.0" r="9" />
+        <text class="pos-chip-text con" x="771.0" y="298.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="c2_rem" onclick="openDetail(this)">
+      <rect class="node-rect" x="901.0" y="216.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="980" y="237.0" text-anchor="middle">Recibir mercadería</text>
+      <text class="node-code" data-sync-field="code" x="980" y="252.0" text-anchor="middle">[REM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="1051.0" cy="222.0" r="9" />
+        <text class="pos-chip-text fis" x="1051.0" y="222.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="c2_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1220" cy="240.0" r="13" />
+      <text class="end-label" x="1220" y="218.0" text-anchor="middle" font-weight="600">Compra finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="374" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="394">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="215.0" y="412" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="229.0" y="432">1</text>
+      <text class="state-chip-name" x="245.0" y="432">Pendiente</text>
+      <text class="state-chip-name sub" x="229.0" y="450">de autorización</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="327.0" cy="406" r="8" />
+        <text class="t-mod" x="327.0" y="407">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="309.0" cy="406" r="8" />
+        <text class="t-anu" x="309.0" y="407">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="405.0" y="412" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="419.0" y="432">2</text>
+      <text class="state-chip-name" x="435.0" y="432">Compra</text>
+      <text class="state-chip-name sub" x="419.0" y="450">autorizada</text>
+      <g class="meta-badge" data-meta="rev-autorizacion" onclick="event.stopPropagation(); openMeta('rev-autorizacion', this)">
+        <circle class="bg-rev" cx="517.0" cy="406" r="8" />
+        <text class="t-rev" x="517.0" y="407">↺</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="4">
+      <rect class="state-chip-rect" x="635.0" y="412" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="649.0" y="432">4</text>
+      <text class="state-chip-name" x="665.0" y="432">Facturada</text>
+      <text class="state-chip-name sub" x="649.0" y="450">pend. recibir</text>
+    </g>
+    <g class="state-chip-g" data-state="6">
+      <rect class="state-chip-rect" x="915.0" y="412" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="929.0" y="432">6</text>
+      <text class="state-chip-name" x="945.0" y="432">Finalizada</text>
+      <text class="state-chip-name sub" x="929.0" y="450">c/ entrega</text>
+    </g>
+    <g class="state-chip-g" data-state="8">
+      <rect class="state-chip-rect bad" x="595.0" y="466" width="130" height="48" rx="8" />
+      <text class="state-chip-num bad" x="609.0" y="486">8</text>
+      <text class="state-chip-name bad" x="625.0" y="486">Compra</text>
+      <text class="state-chip-name sub bad" x="609.0" y="504">rechazada</text>
+      <g class="meta-badge" data-meta="rev-rechazo" onclick="event.stopPropagation(); openMeta('rev-rechazo', this)">
+        <circle class="bg-rev" cx="707.0" cy="460" r="8" />
+        <text class="t-rev" x="707.0" y="461">↺</text>
+      </g>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span><span class="meta-mini" data-meta="rev-rechazo" onclick="openMeta('rev-rechazo', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Rechazo</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Diferencia con <b>Camino feliz (C1)</b>: el orden de [FAC] y [REM] se invierte, y el trámite pasa por estados 4 y 6 en lugar de 3 y 5.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="c3">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO C3</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Cuenta y Orden: FAC dispara LIQTER en Finanzas</div>
+            <div class="scenario-desc">Compra por cuenta y orden del cliente. Tras la factura, se dispara la liquidación al tercero en Finanzas.</div>
+          </div>
+          <div class="scenario-tag tag-ctayorden">Cta. y Orden</div>
+          <div class="scenario-steps">7 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 580" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg odd" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-finanzas)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Finanzas</text>
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="430" />
+
+  <line class="state-leader" x1="280" y1="112.0" x2="280" y2="450" />
+<line class="state-leader" x1="470" y1="177.0" x2="470" y2="450" />
+<line class="state-leader" x1="620" y1="264.0" x2="620" y2="450" />
+<line class="state-leader" x1="860" y1="340.0" x2="860" y2="450" />
+<line class="state-leader" x1="1090" y1="416.0" x2="1090" y2="450" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 201.0 88.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 359.0 88.0 L 452 88.0 A 18 18 0 0 1 470 106.0 L 470 138.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 470 190.0 L 470 222.0 A 18 18 0 0 0 488 240.0 L 541.0 240.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="482" y="238">Sí, autorizo</text>
+<path class="flow-arrow" d="M 699.0 240.0 L 722.0 240.0 A 18 18 0 0 1 740.0 258.0 L 740.0 298.0 A 18 18 0 0 0 758.0 316.0 L 781.0 316.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 939.0 316.0 L 957.0 316.0 A 18 18 0 0 1 975.0 334.0 L 975.0 374.0 A 18 18 0 0 0 993.0 392.0 L 1011.0 392.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1169.0 392.0 L 1267 392.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Necesidad de insumo</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">cta. y orden</text>
+<g class="node" data-node="c3_oc" onclick="openDetail(this)">
+      <rect class="node-rect" x="201.0" y="64.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="280" y="85.0" text-anchor="middle">Registrar OC cta/orden</text>
+      <text class="node-code" data-sync-field="code" x="280" y="100.0" text-anchor="middle">[OC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="351.0" cy="70.0" r="9" />
+        <text class="pos-chip-text com" x="351.0" y="70.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="c3_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 465 141.0 Q 470 138.0 475 141.0 L 517 161.0 Q 522 164.0 517 167.0 L 475 187.0 Q 470 190.0 465 187.0 L 423 167.0 Q 418 164.0 423 161.0 Z" />
+      <text class="gw-label" x="470" y="159.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="470" y="173.0" text-anchor="middle" dominant-baseline="central">compra?</text>
+    </g>
+<g class="node" data-node="c3_rem" onclick="openDetail(this)">
+      <rect class="node-rect" x="541.0" y="216.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="620" y="237.0" text-anchor="middle">Recibir mercadería</text>
+      <text class="node-code" data-sync-field="code" x="620" y="252.0" text-anchor="middle">[REM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="691.0" cy="222.0" r="9" />
+        <text class="pos-chip-text fis" x="691.0" y="222.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="c3_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="781.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="860" y="313.0" text-anchor="middle">Registrar factura</text>
+      <text class="node-code" data-sync-field="code" x="860" y="328.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="931.0" cy="298.0" r="9" />
+        <text class="pos-chip-text con" x="931.0" y="298.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="c3_liq" onclick="openDetail(this)">
+      <rect class="node-rect" x="1011.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1090" y="389.0" text-anchor="middle">Liquidar al tercero</text>
+      <text class="node-code" data-sync-field="code" x="1090" y="404.0" text-anchor="middle">[LIQTER]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1161.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="1161.0" y="374.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="c3_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1280" cy="392.0" r="13" />
+      <text class="end-label" x="1280" y="370.0" text-anchor="middle" font-weight="600">Compra finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="450" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="470">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="215.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="229.0" y="508">1</text>
+      <text class="state-chip-name" x="245.0" y="508">Pendiente</text>
+      <text class="state-chip-name sub" x="229.0" y="526">de autorización</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="327.0" cy="482" r="8" />
+        <text class="t-mod" x="327.0" y="483">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="309.0" cy="482" r="8" />
+        <text class="t-anu" x="309.0" y="483">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="405.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="419.0" y="508">2</text>
+      <text class="state-chip-name" x="435.0" y="508">Compra</text>
+      <text class="state-chip-name sub" x="419.0" y="526">autorizada</text>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="555.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="569.0" y="508">3</text>
+      <text class="state-chip-name" x="585.0" y="508">Recibida</text>
+      <text class="state-chip-name sub" x="569.0" y="526">pend. factura</text>
+    </g>
+    <g class="state-chip-g" data-state="5">
+      <rect class="state-chip-rect" x="795.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="809.0" y="508">5</text>
+      <text class="state-chip-name" x="825.0" y="508">Facturada</text>
+      <text class="state-chip-name sub" x="809.0" y="526">pend. liquidar</text>
+    </g>
+    <g class="state-chip-g" data-state="9">
+      <rect class="state-chip-rect" x="1025.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="1039.0" y="508">9</text>
+      <text class="state-chip-name" x="1055.0" y="508">Liquidada</text>
+      <text class="state-chip-name sub" x="1039.0" y="526">al tercero</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>El estado 9 (o equivalente para LIQTER liquidada) debe ser confirmado con el equipo de Algoritmo — en el PDF actual no está explicitado. El trámite cierra recién cuando LIQTER está registrado y pagado al tercero.</p></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="c4">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO C4</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Devolución con NC tras cierre</div>
+            <div class="scenario-desc">Post-cierre en estado 5, se devuelve mercadería y se registra nota de crédito.</div>
+          </div>
+          <div class="scenario-tag tag-devolucion">Devolución</div>
+          <div class="scenario-steps">4 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 352" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg odd" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Administración</text>
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="202" />
+
+  <line class="state-leader" x1="140" y1="170.5" x2="140" y2="222" />
+<line class="state-leader" x1="420" y1="112.0" x2="420" y2="222" />
+<line class="state-leader" x1="780" y1="188.0" x2="780" y2="222" />
+
+  <path class="flow-arrow bad" d="M 154 164.0 L 229.5 164.0 A 18 18 0 0 0 247.5 146.0 L 247.5 106.0 A 18 18 0 0 1 265.5 88.0 L 341.0 88.0" marker-end="url(#arrow-bad)" />
+<path class="flow-arrow bad" d="M 499.0 88.0 L 582.0 88.0 A 18 18 0 0 1 600.0 106.0 L 600.0 146.0 A 18 18 0 0 0 618.0 164.0 L 701.0 164.0" marker-end="url(#arrow-bad)" />
+<path class="flow-arrow bad" d="M 859.0 164.0 L 1087 164.0" marker-end="url(#arrow-bad)" />
+
+  <circle class="start-event" cx="140" cy="164.0" r="14" />
+    <text class="start-label" x="140" y="140.0" text-anchor="middle">Compra finalizada</text>
+    <text class="start-trigger" x="140" y="154.0" text-anchor="middle">con devolución pendiente</text>
+<g class="node" data-node="c4_rde" onclick="openDetail(this)">
+      <rect class="node-rect exception" x="341.0" y="64.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="420" y="85.0" text-anchor="middle">Devolver mercadería</text>
+      <text class="node-code" data-sync-field="code" x="420" y="100.0" text-anchor="middle">[RDE]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="491.0" cy="70.0" r="9" />
+        <text class="pos-chip-text fis" x="491.0" y="70.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="c4_ncr" onclick="openDetail(this)">
+      <rect class="node-rect exception" x="701.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="780" y="161.0" text-anchor="middle">Registrar NC compra</text>
+      <text class="node-code" data-sync-field="code" x="780" y="176.0" text-anchor="middle">[NCR]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="851.0" cy="146.0" r="9" />
+        <text class="pos-chip-text con" x="851.0" y="146.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="c4_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1100" cy="164.0" r="13" />
+      <text class="end-label" x="1100" y="142.0" text-anchor="middle" font-weight="600">Compra cerrada con NC</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="222" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="242">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="5">
+      <rect class="state-chip-rect" x="75.0" y="260" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="89.0" y="280">5</text>
+      <text class="state-chip-name" x="105.0" y="280">Finalizada</text>
+      <text class="state-chip-name sub" x="89.0" y="298">c/ facturación</text>
+    </g>
+    <g class="state-chip-g" data-state="5.1">
+      <rect class="state-chip-rect" x="355.0" y="260" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="369.0" y="280">5.1</text>
+      <text class="state-chip-name" x="385.0" y="280">Devolución</text>
+      <text class="state-chip-name sub" x="369.0" y="298">registrada</text>
+    </g>
+    <g class="state-chip-g" data-state="5.2">
+      <rect class="state-chip-rect" x="715.0" y="260" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="729.0" y="280">5.2</text>
+      <text class="state-chip-name" x="745.0" y="280">Cerrada</text>
+      <text class="state-chip-name sub" x="729.0" y="298">con NC</text>
+    </g>
+</svg>
+          </div>
+          
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>El estado final del trámite con NC no tiene número formal en el PDF de Algoritmo — queda como una variante del estado 5. Confirmar con Algoritmo si RDE reabre el estado o crea uno nuevo.</p></div><div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Arranca desde el estado 5 del <b>Camino feliz (C1)</b> o del estado 6 del <b>Camino B (C2)</b>.</li></ul></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="tramite " id="tramite-venta" data-tramite="venta">
+    <div class="tramite-head">
+      <div class="eyebrow">Venta · trámite</div>
+      <h1>Venta de Insumos</h1>
+      <p>Trámite que inicia con un pedido del cliente y cierra con la factura y remito emitidos. Requiere doble autorización (comercial y crediticia) antes de proceder.</p>
+      <div class="tramite-meta">
+        <span><b>6 escenarios documentados</b></span>
+        <span><b>8 áreas involucradas</b></span>
+        <span>Tocá el (+) para desplegar cada escenario</span>
+      </div>
+    </div>
+
+    <div class="scenarios">
+
+      <div class="scenario expanded" data-scenario="v1">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO V1</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Camino feliz: pedido → doble autorización → factura → remito</div>
+            <div class="scenario-desc">Flujo principal con autorización comercial + crediticia, factura y entrega física.</div>
+          </div>
+          <div class="scenario-tag tag-principal">Principal</div>
+          <div class="scenario-steps">7 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 656" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="#C1A5A5" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Créditos</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg even" x="0" y="430" width="1400" height="76" />
+    <rect x="0" y="430" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <text class="lane-label" x="16" y="468.0" dominant-baseline="central">Depósito</text>
+    <line class="lane-divider" x1="0" y1="506" x2="1400" y2="506" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="506" />
+
+  <line class="state-leader" x1="290" y1="188.0" x2="290" y2="526" />
+<line class="state-leader" x1="470" y1="253.0" x2="470" y2="526" />
+<line class="state-leader" x1="650" y1="329.0" x2="650" y2="526" />
+<line class="state-leader" x1="830" y1="416.0" x2="830" y2="526" />
+<line class="state-leader" x1="1050" y1="492.0" x2="1050" y2="526" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 164.5 88.0 A 18 18 0 0 1 182.5 106.0 L 182.5 146.0 A 18 18 0 0 0 200.5 164.0 L 211.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 369.0 164.0 L 452 164.0 A 18 18 0 0 1 470 182.0 L 470 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 470 266.0 L 470 260.0 A 18 18 0 0 0 488 278.0 L 632 278.0 A 18 18 0 0 1 650 296.0 L 650 290.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="482" y="272.0">Sí</text>
+<path class="flow-arrow" d="M 650 342.0 L 650 337.0 A 18 18 0 0 0 668 355.0 L 812 355.0 A 18 18 0 0 1 830 373.0 L 830 368.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="662" y="348.0">Sí</text>
+<path class="flow-arrow" d="M 909.0 392.0 L 922.0 392.0 A 18 18 0 0 1 940.0 410.0 L 940.0 450.0 A 18 18 0 0 0 958.0 468.0 L 971.0 468.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1129.0 468.0 L 1267 468.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Pedido del cliente</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">confirmado</text>
+<g class="node" data-node="v1_ped" onclick="openDetail(this)">
+      <rect class="node-rect" x="211.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="290" y="161.0" text-anchor="middle">Registrar pedido</text>
+      <text class="node-code" data-sync-field="code" x="290" y="176.0" text-anchor="middle">[PED]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="361.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="361.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v1_gw1" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 465 217.0 Q 470 214.0 475 217.0 L 517 237.0 Q 522 240.0 517 243.0 L 475 263.0 Q 470 266.0 465 263.0 L 423 243.0 Q 418 240.0 423 237.0 Z" />
+      <text class="gw-label" x="470" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="470" y="249.0" text-anchor="middle" dominant-baseline="central">comercial?</text>
+    </g>
+<g class="node" data-node="v1_gw2" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 645 293.0 Q 650 290.0 655 293.0 L 697 313.0 Q 702 316.0 697 319.0 L 655 339.0 Q 650 342.0 645 339.0 L 603 319.0 Q 598 316.0 603 313.0 Z" />
+      <text class="gw-label" x="650" y="311.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="650" y="325.0" text-anchor="middle" dominant-baseline="central">crediticia?</text>
+    </g>
+<g class="node" data-node="v1_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="751.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="830" y="389.0" text-anchor="middle">Emitir factura</text>
+      <text class="node-code" data-sync-field="code" x="830" y="404.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="901.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="901.0" y="374.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="v1_rem" onclick="openDetail(this)">
+      <rect class="node-rect" x="971.0" y="444.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1050" y="465.0" text-anchor="middle">Emitir remito</text>
+      <text class="node-code" data-sync-field="code" x="1050" y="480.0" text-anchor="middle">[REM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="1121.0" cy="450.0" r="9" />
+        <text class="pos-chip-text fis" x="1121.0" y="450.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="v1_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1280" cy="468.0" r="13" />
+      <text class="end-label" x="1280" y="446.0" text-anchor="middle" font-weight="600">Venta finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="526" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="546">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="225.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="239.0" y="584">1</text>
+      <text class="state-chip-name" x="255.0" y="584">Pend.</text>
+      <text class="state-chip-name sub" x="239.0" y="602">aut. comercial</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="337.0" cy="558" r="8" />
+        <text class="t-mod" x="337.0" y="559">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="319.0" cy="558" r="8" />
+        <text class="t-anu" x="319.0" y="559">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="405.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="419.0" y="584">2</text>
+      <text class="state-chip-name" x="435.0" y="584">Pend.</text>
+      <text class="state-chip-name sub" x="419.0" y="602">aut. crediticia</text>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="585.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="599.0" y="584">3</text>
+      <text class="state-chip-name" x="615.0" y="584">Aut.</text>
+      <text class="state-chip-name sub" x="599.0" y="602">crediticia</text>
+    </g>
+    <g class="state-chip-g" data-state="5">
+      <rect class="state-chip-rect" x="765.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="779.0" y="584">5</text>
+      <text class="state-chip-name" x="795.0" y="584">Facturada</text>
+      <text class="state-chip-name sub" x="779.0" y="602">pend. remito</text>
+    </g>
+    <g class="state-chip-g" data-state="7">
+      <rect class="state-chip-rect" x="985.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="999.0" y="584">7</text>
+      <text class="state-chip-name" x="1015.0" y="584">Finalizada</text>
+      <text class="state-chip-name sub" x="999.0" y="602">c/ remito</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span><span class="meta-mini" data-meta="rev-rechazo" onclick="openMeta('rev-rechazo', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Rechazo</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>La numeración de estados específica para Venta debe cruzarse con el PDF de Algoritmo (16 estados) — los números de esta vista son placeholders operativos. La doble autorización (comercial + crediticia) es el núcleo del diferencial con Compra.</p></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="v2">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO V2</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Entrega anticipada sin autorizar</div>
+            <div class="scenario-desc">El cliente retira antes de que se completen las autorizaciones. Se registra un remito sin factura (REMSF) que bloquea hasta que las autorizaciones se completen.</div>
+          </div>
+          <div class="scenario-tag tag-variante">Variante</div>
+          <div class="scenario-steps">7 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 656" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="#C1A5A5" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Créditos</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg even" x="0" y="430" width="1400" height="76" />
+    <rect x="0" y="430" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <text class="lane-label" x="16" y="468.0" dominant-baseline="central">Administración</text>
+    <line class="lane-divider" x1="0" y1="506" x2="1400" y2="506" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="506" />
+
+  <line class="state-leader" x1="290" y1="188.0" x2="290" y2="526" />
+<line class="state-leader" x1="460" y1="416.0" x2="460" y2="526" />
+<line class="state-leader" x1="700" y1="253.0" x2="700" y2="526" />
+<line class="state-leader" x1="880" y1="329.0" x2="880" y2="526" />
+<line class="state-leader" x1="1080" y1="492.0" x2="1080" y2="526" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 164.5 88.0 A 18 18 0 0 1 182.5 106.0 L 182.5 146.0 A 18 18 0 0 0 200.5 164.0 L 211.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 369.0 164.0 L 357.0 164.0 A 18 18 0 0 1 375.0 182.0 L 375.0 374.0 A 18 18 0 0 0 393.0 392.0 L 381.0 392.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 539.0 392.0 L 682 392.0 A 18 18 0 0 0 700 374.0 L 700 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 700 266.0 L 700 260.0 A 18 18 0 0 0 718 278.0 L 862 278.0 A 18 18 0 0 1 880 296.0 L 880 290.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="710" y="272.0">Sí</text>
+<path class="flow-arrow" d="M 932 316.0 L 948.5 316.0 A 18 18 0 0 1 966.5 334.0 L 966.5 450.0 A 18 18 0 0 0 984.5 468.0 L 1001.0 468.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="950" y="460.0">Sí</text>
+<path class="flow-arrow" d="M 1159.0 468.0 L 1277 468.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Cliente retira</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">anticipado</text>
+<g class="node" data-node="v2_ped" onclick="openDetail(this)">
+      <rect class="node-rect" x="211.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="290" y="161.0" text-anchor="middle">Registrar pedido</text>
+      <text class="node-code" data-sync-field="code" x="290" y="176.0" text-anchor="middle">[PED]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="361.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="361.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v2_remsf" onclick="openDetail(this)">
+      <rect class="node-rect exception" x="381.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="460" y="389.0" text-anchor="middle">Remito sin factura</text>
+      <text class="node-code" data-sync-field="code" x="460" y="404.0" text-anchor="middle">[REMSF]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="531.0" cy="374.0" r="9" />
+        <text class="pos-chip-text fis" x="531.0" y="374.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="v2_gw1" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 695 217.0 Q 700 214.0 705 217.0 L 747 237.0 Q 752 240.0 747 243.0 L 705 263.0 Q 700 266.0 695 263.0 L 653 243.0 Q 648 240.0 653 237.0 Z" />
+      <text class="gw-label" x="700" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="700" y="249.0" text-anchor="middle" dominant-baseline="central">comercial?</text>
+    </g>
+<g class="node" data-node="v2_gw2" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 875 293.0 Q 880 290.0 885 293.0 L 927 313.0 Q 932 316.0 927 319.0 L 885 339.0 Q 880 342.0 875 339.0 L 833 319.0 Q 828 316.0 833 313.0 Z" />
+      <text class="gw-label" x="880" y="311.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="880" y="325.0" text-anchor="middle" dominant-baseline="central">crediticia?</text>
+    </g>
+<g class="node" data-node="v2_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="1001.0" y="444.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1080" y="465.0" text-anchor="middle">Emitir factura</text>
+      <text class="node-code" data-sync-field="code" x="1080" y="480.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1151.0" cy="450.0" r="9" />
+        <text class="pos-chip-text con" x="1151.0" y="450.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="v2_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1290" cy="468.0" r="13" />
+      <text class="end-label" x="1290" y="446.0" text-anchor="middle" font-weight="600">Venta finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="526" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="546">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="225.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="239.0" y="584">1</text>
+      <text class="state-chip-name" x="255.0" y="584">Pend.</text>
+      <text class="state-chip-name sub" x="239.0" y="602">aut. comercial</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="337.0" cy="558" r="8" />
+        <text class="t-mod" x="337.0" y="559">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="319.0" cy="558" r="8" />
+        <text class="t-anu" x="319.0" y="559">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="11">
+      <rect class="state-chip-rect" x="395.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="409.0" y="584">11</text>
+      <text class="state-chip-name" x="425.0" y="584">REMSF</text>
+      <text class="state-chip-name sub" x="409.0" y="602">pend. aut.</text>
+    </g>
+    <g class="state-chip-g" data-state="12">
+      <rect class="state-chip-rect" x="635.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="649.0" y="584">12</text>
+      <text class="state-chip-name" x="665.0" y="584">REMSF</text>
+      <text class="state-chip-name sub" x="649.0" y="602">aut. comercial</text>
+    </g>
+    <g class="state-chip-g" data-state="13">
+      <rect class="state-chip-rect" x="815.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="829.0" y="584">13</text>
+      <text class="state-chip-name" x="845.0" y="584">REMSF</text>
+      <text class="state-chip-name sub" x="829.0" y="602">aut. crediticia</text>
+    </g>
+    <g class="state-chip-g" data-state="14">
+      <rect class="state-chip-rect" x="1015.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="1029.0" y="584">14</text>
+      <text class="state-chip-name" x="1045.0" y="584">Finalizada</text>
+      <text class="state-chip-name sub" x="1029.0" y="602">c/ REMSF+FAC</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>REMSF es la forma de Algoritmo de permitir la salida física de mercadería sin las autorizaciones completas — luego se regularizan. Los números de estado en esta serie (11-14) son placeholders; verificar con Algoritmo.</p></div><div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>A diferencia de <b>V1 (camino feliz)</b>, el remito se emite antes que las autorizaciones y queda como REMSF.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="v3">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO V3</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Venta rechazada o anulada</div>
+            <div class="scenario-desc">No pasa autorización comercial o crediticia, o se anula antes de autorizar.</div>
+          </div>
+          <div class="scenario-tag tag-excepcion">Excepción</div>
+          <div class="scenario-steps">6 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 504" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="#C1A5A5" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Créditos</text>
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="354" />
+
+  <line class="state-leader" x1="310" y1="188.0" x2="310" y2="374" />
+<line class="state-leader bad" x1="780" y1="246.5" x2="780" y2="374" />
+<line class="state-leader bad" x1="1100" y1="322.5" x2="1100" y2="374" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 174.5 88.0 A 18 18 0 0 1 192.5 106.0 L 192.5 146.0 A 18 18 0 0 0 210.5 164.0 L 231.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 389.0 164.0 L 522 164.0 A 18 18 0 0 1 540 182.0 L 540 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow bad" d="M 592 240.0 L 767 240.0" marker-end="url(#arrow-bad)" />
+    <text class="flow-label bad" x="620" y="232.0">No</text>
+<path class="flow-arrow" d="M 540 266.0 L 540 260.0 A 18 18 0 0 0 558 278.0 L 762 278.0 A 18 18 0 0 1 780 296.0 L 780 290.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="552" y="272.0">Sí</text>
+<path class="flow-arrow bad" d="M 832 316.0 L 1087 316.0" marker-end="url(#arrow-bad)" />
+    <text class="flow-label bad" x="900" y="308.0">No</text>
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Pedido del cliente</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">confirmado</text>
+<g class="node" data-node="v3_ped" onclick="openDetail(this)">
+      <rect class="node-rect" x="231.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="310" y="161.0" text-anchor="middle">Registrar pedido</text>
+      <text class="node-code" data-sync-field="code" x="310" y="176.0" text-anchor="middle">[PED]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="381.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="381.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v3_gw1" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 535 217.0 Q 540 214.0 545 217.0 L 587 237.0 Q 592 240.0 587 243.0 L 545 263.0 Q 540 266.0 535 263.0 L 493 243.0 Q 488 240.0 493 237.0 Z" />
+      <text class="gw-label" x="540" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="540" y="249.0" text-anchor="middle" dominant-baseline="central">comercial?</text>
+    </g>
+<g class="node" data-node="v3_rej1" onclick="openDetail(this)">
+      <circle class="end-event bad" cx="780" cy="240.0" r="13" />
+      <circle class="end-core bad" cx="780" cy="240.0" r="6" />
+      <text class="end-label bad" x="780" y="218.0" text-anchor="middle" font-weight="600">Rechazada comercial</text>
+    </g>
+<g class="node" data-node="v3_gw2" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 775 293.0 Q 780 290.0 785 293.0 L 827 313.0 Q 832 316.0 827 319.0 L 785 339.0 Q 780 342.0 775 339.0 L 733 319.0 Q 728 316.0 733 313.0 Z" />
+      <text class="gw-label" x="780" y="311.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="780" y="325.0" text-anchor="middle" dominant-baseline="central">crediticia?</text>
+    </g>
+<g class="node" data-node="v3_rej2" onclick="openDetail(this)">
+      <circle class="end-event bad" cx="1100" cy="316.0" r="13" />
+      <circle class="end-core bad" cx="1100" cy="316.0" r="6" />
+      <text class="end-label bad" x="1100" y="294.0" text-anchor="middle" font-weight="600">Rechazada crediticia</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="374" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="394">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="245.0" y="412" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="259.0" y="432">1</text>
+      <text class="state-chip-name" x="275.0" y="432">Pend.</text>
+      <text class="state-chip-name sub" x="259.0" y="450">aut. comercial</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="357.0" cy="406" r="8" />
+        <text class="t-mod" x="357.0" y="407">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="339.0" cy="406" r="8" />
+        <text class="t-anu" x="339.0" y="407">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="15">
+      <rect class="state-chip-rect bad" x="715.0" y="466" width="130" height="48" rx="8" />
+      <text class="state-chip-num bad" x="729.0" y="486">15</text>
+      <text class="state-chip-name bad" x="745.0" y="486">Rechazada</text>
+      <text class="state-chip-name sub bad" x="729.0" y="504">comercial</text>
+      <g class="meta-badge" data-meta="rev-rechazo" onclick="event.stopPropagation(); openMeta('rev-rechazo', this)">
+        <circle class="bg-rev" cx="827.0" cy="460" r="8" />
+        <text class="t-rev" x="827.0" y="461">↺</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="16">
+      <rect class="state-chip-rect bad" x="1035.0" y="466" width="130" height="48" rx="8" />
+      <text class="state-chip-num bad" x="1049.0" y="486">16</text>
+      <text class="state-chip-name bad" x="1065.0" y="486">Rechazada</text>
+      <text class="state-chip-name sub bad" x="1049.0" y="504">crediticia</text>
+      <g class="meta-badge" data-meta="rev-rechazo" onclick="event.stopPropagation(); openMeta('rev-rechazo', this)">
+        <circle class="bg-rev" cx="1147.0" cy="460" r="8" />
+        <text class="t-rev" x="1147.0" y="461">↺</text>
+      </g>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-rechazo" onclick="openMeta('rev-rechazo', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Rechazo</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Es el negativo de los caminos autorizadores en <b>V1</b> y <b>V2</b>.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="v4">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO V4</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Venta Cuenta y Orden + Líquido Producto</div>
+            <div class="scenario-desc">Venta por cuenta y orden con liquidación de producto al tercero. Factura dispara trámite de liquidación.</div>
+          </div>
+          <div class="scenario-tag tag-ctayorden">Cta. y Orden</div>
+          <div class="scenario-steps">8 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 732" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="#C1A5A5" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Créditos</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg even" x="0" y="430" width="1400" height="76" />
+    <rect x="0" y="430" width="4" height="76" fill="var(--sector-finanzas)" />
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <text class="lane-label" x="16" y="468.0" dominant-baseline="central">Finanzas</text>
+    <rect class="lane-bg odd" x="0" y="506" width="1400" height="76" />
+    <rect x="0" y="506" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="506" x2="1400" y2="506" />
+    <text class="lane-label" x="16" y="544.0" dominant-baseline="central">Depósito</text>
+    <line class="lane-divider" x1="0" y1="582" x2="1400" y2="582" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="582" />
+
+  <line class="state-leader" x1="280" y1="188.0" x2="280" y2="602" />
+<line class="state-leader" x1="460" y1="253.0" x2="460" y2="602" />
+<line class="state-leader" x1="620" y1="329.0" x2="620" y2="602" />
+<line class="state-leader" x1="790" y1="416.0" x2="790" y2="602" />
+<line class="state-leader" x1="970" y1="492.0" x2="970" y2="602" />
+<line class="state-leader" x1="1160" y1="568.0" x2="1160" y2="602" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 159.5 88.0 A 18 18 0 0 1 177.5 106.0 L 177.5 146.0 A 18 18 0 0 0 195.5 164.0 L 201.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 359.0 164.0 L 442 164.0 A 18 18 0 0 1 460 182.0 L 460 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 460 266.0 L 460 260.0 A 18 18 0 0 0 478 278.0 L 602 278.0 A 18 18 0 0 1 620 296.0 L 620 290.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="472" y="272.0">Sí</text>
+<path class="flow-arrow" d="M 620 342.0 L 620 337.0 A 18 18 0 0 0 638 355.0 L 772 355.0 A 18 18 0 0 1 790 373.0 L 790 368.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="632" y="348.0">Sí</text>
+<path class="flow-arrow" d="M 790 416.0 L 790 412.0 A 18 18 0 0 0 808 430.0 L 952 430.0 A 18 18 0 0 1 970 448.0 L 970 444.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1049.0 468.0 L 1142 468.0 A 18 18 0 0 1 1160 486.0 L 1160 520.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1239.0 544.0 L 1307 544.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Pedido cta/orden</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">confirmado</text>
+<g class="node" data-node="v4_ped" onclick="openDetail(this)">
+      <rect class="node-rect" x="201.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="280" y="161.0" text-anchor="middle">Registrar pedido cta/ord</text>
+      <text class="node-code" data-sync-field="code" x="280" y="176.0" text-anchor="middle">[PED]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="351.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="351.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v4_gw1" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 455 217.0 Q 460 214.0 465 217.0 L 507 237.0 Q 512 240.0 507 243.0 L 465 263.0 Q 460 266.0 455 263.0 L 413 243.0 Q 408 240.0 413 237.0 Z" />
+      <text class="gw-label" x="460" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="460" y="249.0" text-anchor="middle" dominant-baseline="central">comercial?</text>
+    </g>
+<g class="node" data-node="v4_gw2" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 615 293.0 Q 620 290.0 625 293.0 L 667 313.0 Q 672 316.0 667 319.0 L 625 339.0 Q 620 342.0 615 339.0 L 573 319.0 Q 568 316.0 573 313.0 Z" />
+      <text class="gw-label" x="620" y="311.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="620" y="325.0" text-anchor="middle" dominant-baseline="central">crediticia?</text>
+    </g>
+<g class="node" data-node="v4_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="711.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="790" y="389.0" text-anchor="middle">Emitir factura</text>
+      <text class="node-code" data-sync-field="code" x="790" y="404.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="861.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="861.0" y="374.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="v4_liq" onclick="openDetail(this)">
+      <rect class="node-rect" x="891.0" y="444.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="970" y="465.0" text-anchor="middle">Liquidar producto</text>
+      <text class="node-code" data-sync-field="code" x="970" y="480.0" text-anchor="middle">[LIQPRO]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1041.0" cy="450.0" r="9" />
+        <text class="pos-chip-text con" x="1041.0" y="450.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="v4_rem" onclick="openDetail(this)">
+      <rect class="node-rect" x="1081.0" y="520.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1160" y="541.0" text-anchor="middle">Emitir remito</text>
+      <text class="node-code" data-sync-field="code" x="1160" y="556.0" text-anchor="middle">[REM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="1231.0" cy="526.0" r="9" />
+        <text class="pos-chip-text fis" x="1231.0" y="526.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="v4_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1320" cy="544.0" r="13" />
+      <text class="end-label" x="1320" y="522.0" text-anchor="middle" font-weight="600">Venta finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="602" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="622">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="215.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="229.0" y="660">1</text>
+      <text class="state-chip-name" x="245.0" y="660">Pend.</text>
+      <text class="state-chip-name sub" x="229.0" y="678">aut. comercial</text>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="395.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="409.0" y="660">2</text>
+      <text class="state-chip-name" x="425.0" y="660">Pend.</text>
+      <text class="state-chip-name sub" x="409.0" y="678">aut. credit.</text>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="555.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="569.0" y="660">3</text>
+      <text class="state-chip-name" x="585.0" y="660">Autorizada</text>
+    </g>
+    <g class="state-chip-g" data-state="5">
+      <rect class="state-chip-rect" x="725.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="739.0" y="660">5</text>
+      <text class="state-chip-name" x="755.0" y="660">Facturada</text>
+      <text class="state-chip-name sub" x="739.0" y="678">pend. liq.</text>
+    </g>
+    <g class="state-chip-g" data-state="8">
+      <rect class="state-chip-rect" x="905.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="919.0" y="660">8</text>
+      <text class="state-chip-name" x="935.0" y="660">Liquidada</text>
+      <text class="state-chip-name sub" x="919.0" y="678">producto</text>
+    </g>
+    <g class="state-chip-g" data-state="9">
+      <rect class="state-chip-rect" x="1095.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="1109.0" y="660">9</text>
+      <text class="state-chip-name" x="1125.0" y="660">Finalizada</text>
+      <text class="state-chip-name sub" x="1109.0" y="678">c/ remito</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>LIQPRO (líquido producto) es el equivalente de LIQTER de Compra pero en ventas cuenta y orden. Los números de estado son placeholders.</p></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="v5">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO V5</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Devolución de mercadería + NC</div>
+            <div class="scenario-desc">El cliente devuelve mercadería después del cierre. Requiere solicitud, autorización y registro de NC.</div>
+          </div>
+          <div class="scenario-tag tag-devolucion">Devolución</div>
+          <div class="scenario-steps">6 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 580" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Administración</text>
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="430" />
+
+  <line class="state-leader" x1="140" y1="94.5" x2="140" y2="450" />
+<line class="state-leader" x1="300" y1="188.0" x2="300" y2="450" />
+<line class="state-leader" x1="500" y1="253.0" x2="500" y2="450" />
+<line class="state-leader" x1="720" y1="340.0" x2="720" y2="450" />
+<line class="state-leader" x1="990" y1="416.0" x2="990" y2="450" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 169.5 88.0 A 18 18 0 0 1 187.5 106.0 L 187.5 146.0 A 18 18 0 0 0 205.5 164.0 L 221.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 379.0 164.0 L 482 164.0 A 18 18 0 0 1 500 182.0 L 500 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 500 266.0 L 500 298.0 A 18 18 0 0 0 518 316.0 L 641.0 316.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="512" y="272.0">Sí</text>
+<path class="flow-arrow bad" d="M 799.0 316.0 L 837.0 316.0 A 18 18 0 0 1 855.0 334.0 L 855.0 374.0 A 18 18 0 0 0 873.0 392.0 L 911.0 392.0" marker-end="url(#arrow-bad)" />
+<path class="flow-arrow bad" d="M 1069.0 392.0 L 1227 392.0" marker-end="url(#arrow-bad)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Cliente solicita</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">devolución</text>
+<g class="node" data-node="v5_sol" onclick="openDetail(this)">
+      <rect class="node-rect exception" x="221.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="300" y="161.0" text-anchor="middle">Solicitud devolución</text>
+      <text class="node-code" data-sync-field="code" x="300" y="176.0" text-anchor="middle">[SOLDEV]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="371.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="371.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v5_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 495 217.0 Q 500 214.0 505 217.0 L 547 237.0 Q 552 240.0 547 243.0 L 505 263.0 Q 500 266.0 495 263.0 L 453 243.0 Q 448 240.0 453 237.0 Z" />
+      <text class="gw-label" x="500" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="500" y="249.0" text-anchor="middle" dominant-baseline="central">devolución?</text>
+    </g>
+<g class="node" data-node="v5_rde" onclick="openDetail(this)">
+      <rect class="node-rect exception" x="641.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="720" y="313.0" text-anchor="middle">Recibir devolución</text>
+      <text class="node-code" data-sync-field="code" x="720" y="328.0" text-anchor="middle">[RDE]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="791.0" cy="298.0" r="9" />
+        <text class="pos-chip-text fis" x="791.0" y="298.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="v5_ncr" onclick="openDetail(this)">
+      <rect class="node-rect exception" x="911.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="990" y="389.0" text-anchor="middle">Registrar NC venta</text>
+      <text class="node-code" data-sync-field="code" x="990" y="404.0" text-anchor="middle">[NCR]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1061.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="1061.0" y="374.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="v5_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1240" cy="392.0" r="13" />
+      <text class="end-label" x="1240" y="370.0" text-anchor="middle" font-weight="600">Devolución cerrada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="450" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="470">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="7">
+      <rect class="state-chip-rect" x="75.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="89.0" y="508">7</text>
+      <text class="state-chip-name" x="105.0" y="508">Finalizada</text>
+      <text class="state-chip-name sub" x="89.0" y="526">c/ remito</text>
+    </g>
+    <g class="state-chip-g" data-state="10">
+      <rect class="state-chip-rect" x="235.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="249.0" y="508">10</text>
+      <text class="state-chip-name" x="265.0" y="508">Solicitud</text>
+      <text class="state-chip-name sub" x="249.0" y="526">devolución</text>
+    </g>
+    <g class="state-chip-g" data-state="11">
+      <rect class="state-chip-rect" x="435.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="449.0" y="508">11</text>
+      <text class="state-chip-name" x="465.0" y="508">Autorizada</text>
+      <text class="state-chip-name sub" x="449.0" y="526">devol.</text>
+    </g>
+    <g class="state-chip-g" data-state="12">
+      <rect class="state-chip-rect" x="655.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="669.0" y="508">12</text>
+      <text class="state-chip-name" x="685.0" y="508">Devuelta</text>
+      <text class="state-chip-name sub" x="669.0" y="526">física</text>
+    </g>
+    <g class="state-chip-g" data-state="13">
+      <rect class="state-chip-rect" x="925.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="939.0" y="508">13</text>
+      <text class="state-chip-name" x="955.0" y="508">NC</text>
+      <text class="state-chip-name sub" x="939.0" y="526">registrada</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Arranca desde el estado finalizado de <b>V1</b> o <b>V2</b>.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="v6">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO V6</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Solicitud de despacho y logística</div>
+            <div class="scenario-desc">Inserta 3 pasos logísticos entre factura y remito: solicitud de despacho, programación y despacho efectivo.</div>
+          </div>
+          <div class="scenario-tag tag-logistica">Logística</div>
+          <div class="scenario-steps">8 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 732" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="#C1A5A5" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Créditos</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg even" x="0" y="430" width="1400" height="76" />
+    <rect x="0" y="430" width="4" height="76" fill="#B6C9B7" />
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <text class="lane-label" x="16" y="468.0" dominant-baseline="central">Logística</text>
+    <rect class="lane-bg odd" x="0" y="506" width="1400" height="76" />
+    <rect x="0" y="506" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="506" x2="1400" y2="506" />
+    <text class="lane-label" x="16" y="544.0" dominant-baseline="central">Depósito</text>
+    <line class="lane-divider" x1="0" y1="582" x2="1400" y2="582" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="582" />
+
+  <line class="state-leader" x1="280" y1="188.0" x2="280" y2="602" />
+<line class="state-leader" x1="450" y1="253.0" x2="450" y2="602" />
+<line class="state-leader" x1="600" y1="329.0" x2="600" y2="602" />
+<line class="state-leader" x1="780" y1="416.0" x2="780" y2="602" />
+<line class="state-leader" x1="970" y1="492.0" x2="970" y2="602" />
+<line class="state-leader" x1="1170" y1="492.0" x2="1170" y2="602" />
+<line class="state-leader" x1="1300" y1="568.0" x2="1300" y2="602" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 159.5 88.0 A 18 18 0 0 1 177.5 106.0 L 177.5 146.0 A 18 18 0 0 0 195.5 164.0 L 201.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 359.0 164.0 L 432 164.0 A 18 18 0 0 1 450 182.0 L 450 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 450 266.0 L 450 260.0 A 18 18 0 0 0 468 278.0 L 582 278.0 A 18 18 0 0 1 600 296.0 L 600 290.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 600 342.0 L 600 337.0 A 18 18 0 0 0 618 355.0 L 762 355.0 A 18 18 0 0 1 780 373.0 L 780 368.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 780 416.0 L 780 412.0 A 18 18 0 0 0 798 430.0 L 952 430.0 A 18 18 0 0 1 970 448.0 L 970 444.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1049.0 468.0 L 1091.0 468.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1249.0 468.0 L 1282 468.0 A 18 18 0 0 1 1300 486.0 L 1300 520.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Pedido con</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">envío acordado</text>
+<g class="node" data-node="v6_ped" onclick="openDetail(this)">
+      <rect class="node-rect" x="201.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="280" y="161.0" text-anchor="middle">Registrar pedido</text>
+      <text class="node-code" data-sync-field="code" x="280" y="176.0" text-anchor="middle">[PED]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="351.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="351.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v6_gw1" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 445 217.0 Q 450 214.0 455 217.0 L 497 237.0 Q 502 240.0 497 243.0 L 455 263.0 Q 450 266.0 445 263.0 L 403 243.0 Q 398 240.0 403 237.0 Z" />
+      <text class="gw-label" x="450" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="450" y="249.0" text-anchor="middle" dominant-baseline="central">comercial?</text>
+    </g>
+<g class="node" data-node="v6_gw2" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 595 293.0 Q 600 290.0 605 293.0 L 647 313.0 Q 652 316.0 647 319.0 L 605 339.0 Q 600 342.0 595 339.0 L 553 319.0 Q 548 316.0 553 313.0 Z" />
+      <text class="gw-label" x="600" y="311.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="600" y="325.0" text-anchor="middle" dominant-baseline="central">crediticia?</text>
+    </g>
+<g class="node" data-node="v6_fac" onclick="openDetail(this)">
+      <rect class="node-rect" x="701.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="780" y="389.0" text-anchor="middle">Emitir factura</text>
+      <text class="node-code" data-sync-field="code" x="780" y="404.0" text-anchor="middle">[FAC]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="851.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="851.0" y="374.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="v6_sol" onclick="openDetail(this)">
+      <rect class="node-rect" x="891.0" y="444.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="970" y="465.0" text-anchor="middle">Sol. de despacho</text>
+      <text class="node-code" data-sync-field="code" x="970" y="480.0" text-anchor="middle">[SOLDESP]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="1041.0" cy="450.0" r="9" />
+        <text class="pos-chip-text com" x="1041.0" y="450.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v6_prg" onclick="openDetail(this)">
+      <rect class="node-rect" x="1091.0" y="444.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1170" y="465.0" text-anchor="middle">Programar despacho</text>
+      <text class="node-code" data-sync-field="code" x="1170" y="480.0" text-anchor="middle">[PRGDESP]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="1241.0" cy="450.0" r="9" />
+        <text class="pos-chip-text com" x="1241.0" y="450.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="v6_rem" onclick="openDetail(this)">
+      <rect class="node-rect" x="1235.0" y="520.0" width="130" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1300" y="541.0" text-anchor="middle">Emitir remito</text>
+      <text class="node-code" data-sync-field="code" x="1300" y="556.0" text-anchor="middle">[REM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="1357.0" cy="526.0" r="9" />
+        <text class="pos-chip-text fis" x="1357.0" y="526.0">fis</text>
+      </g>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="602" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="622">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="215.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="229.0" y="660">1</text>
+      <text class="state-chip-name" x="245.0" y="660">Pend.</text>
+      <text class="state-chip-name sub" x="229.0" y="678">aut. comercial</text>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="385.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="399.0" y="660">2</text>
+      <text class="state-chip-name" x="415.0" y="660">Pend.</text>
+      <text class="state-chip-name sub" x="399.0" y="678">aut. credit.</text>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="535.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="549.0" y="660">3</text>
+      <text class="state-chip-name" x="565.0" y="660">Autorizada</text>
+    </g>
+    <g class="state-chip-g" data-state="5">
+      <rect class="state-chip-rect" x="715.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="729.0" y="660">5</text>
+      <text class="state-chip-name" x="745.0" y="660">Facturada</text>
+      <text class="state-chip-name sub" x="729.0" y="678">pend. despachar</text>
+    </g>
+    <g class="state-chip-g" data-state="6">
+      <rect class="state-chip-rect" x="905.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="919.0" y="660">6</text>
+      <text class="state-chip-name" x="935.0" y="660">Despacho</text>
+      <text class="state-chip-name sub" x="919.0" y="678">solicitado</text>
+    </g>
+    <g class="state-chip-g" data-state="6.5">
+      <rect class="state-chip-rect" x="1105.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="1119.0" y="660">6.5</text>
+      <text class="state-chip-name" x="1135.0" y="660">Despacho</text>
+      <text class="state-chip-name sub" x="1119.0" y="678">programado</text>
+    </g>
+    <g class="state-chip-g" data-state="7">
+      <rect class="state-chip-rect" x="1235.0" y="640" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="1249.0" y="660">7</text>
+      <text class="state-chip-name" x="1265.0" y="660">Finalizada</text>
+      <text class="state-chip-name sub" x="1249.0" y="678">c/ remito</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Extiende <b>V1</b> con 3 pasos logísticos entre FAC y REM.</li></ul></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="tramite " id="tramite-vtadirecta" data-tramite="vtadirecta">
+    <div class="tramite-head">
+      <div class="eyebrow">Venta Directa · trámite</div>
+      <h1>Venta Directa (Bayer)</h1>
+      <p>Bayer vende directo al cliente; Lartirigoyen factura comisión y opera entrega. Incluye tres participantes externos: cliente, proveedor Bayer, y operación interna de Lartirigoyen.</p>
+      <div class="tramite-meta">
+        <span><b>3 escenarios documentados</b></span>
+        <span><b>6 áreas involucradas</b></span>
+        <span>Tocá el (+) para desplegar cada escenario</span>
+      </div>
+    </div>
+
+    <div class="scenarios">
+
+      <div class="scenario expanded" data-scenario="vd1">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO VD1</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Camino feliz: Bayer factura al cliente, Lartirigoyen comisiona</div>
+            <div class="scenario-desc">Bayer emite factura directa al cliente final; Lartirigoyen registra el acuerdo y emite factura de comisión.</div>
+          </div>
+          <div class="scenario-tag tag-principal">Principal</div>
+          <div class="scenario-steps">6 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 580" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg external" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="#9AA8B3" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Bayer</text>
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="430" />
+
+  <line class="state-leader" x1="310" y1="188.0" x2="310" y2="450" />
+<line class="state-leader" x1="500" y1="253.0" x2="500" y2="450" />
+<line class="state-leader" x1="720" y1="416.0" x2="720" y2="450" />
+<line class="state-leader" x1="970" y1="340.0" x2="970" y2="450" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 174.5 88.0 A 18 18 0 0 1 192.5 106.0 L 192.5 146.0 A 18 18 0 0 0 210.5 164.0 L 231.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 389.0 164.0 L 482 164.0 A 18 18 0 0 1 500 182.0 L 500 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 500 266.0 L 500 299.0 A 18 18 0 0 0 518 317.0 L 702 317.0 A 18 18 0 0 1 720 335.0 L 720 368.0" marker-end="url(#arrow)" />
+    <text class="flow-label" x="512" y="272.0">Sí</text>
+<path class="flow-arrow" d="M 799.0 392.0 L 827.0 392.0 A 18 18 0 0 0 845.0 374.0 L 845.0 334.0 A 18 18 0 0 1 863.0 316.0 L 891.0 316.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1049.0 316.0 L 1207 316.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Venta directa</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">acordada</text>
+<g class="node" data-node="vd1_reg" onclick="openDetail(this)">
+      <rect class="node-rect" x="231.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="310" y="161.0" text-anchor="middle">Registrar VD</text>
+      <text class="node-code" data-sync-field="code" x="310" y="176.0" text-anchor="middle">[VDIR]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="381.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="381.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="vd1_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 495 217.0 Q 500 214.0 505 217.0 L 547 237.0 Q 552 240.0 547 243.0 L 505 263.0 Q 500 266.0 495 263.0 L 453 243.0 Q 448 240.0 453 237.0 Z" />
+      <text class="gw-label" x="500" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="500" y="249.0" text-anchor="middle" dominant-baseline="central">acuerdo?</text>
+    </g>
+<g class="node" data-node="vd1_facBayer" onclick="openDetail(this)">
+      <rect class="node-rect" x="641.0" y="368.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="720" y="389.0" text-anchor="middle">Factura de Bayer</text>
+      <text class="node-code" data-sync-field="code" x="720" y="404.0" text-anchor="middle">[FACBAY]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="791.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="791.0" y="374.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="vd1_faccom" onclick="openDetail(this)">
+      <rect class="node-rect" x="891.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="970" y="313.0" text-anchor="middle">Factura de comisión</text>
+      <text class="node-code" data-sync-field="code" x="970" y="328.0" text-anchor="middle">[FACCOM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1041.0" cy="298.0" r="9" />
+        <text class="pos-chip-text con" x="1041.0" y="298.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="vd1_end" onclick="openDetail(this)">
+      <circle class="end-event" cx="1220" cy="316.0" r="13" />
+      <text class="end-label" x="1220" y="294.0" text-anchor="middle" font-weight="600">VD finalizada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="450" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="470">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="245.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="259.0" y="508">1</text>
+      <text class="state-chip-name" x="275.0" y="508">Pend.</text>
+      <text class="state-chip-name sub" x="259.0" y="526">autorización</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="357.0" cy="482" r="8" />
+        <text class="t-mod" x="357.0" y="483">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="339.0" cy="482" r="8" />
+        <text class="t-anu" x="339.0" y="483">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="435.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="449.0" y="508">2</text>
+      <text class="state-chip-name" x="465.0" y="508">Autorizada</text>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="655.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="669.0" y="508">3</text>
+      <text class="state-chip-name" x="685.0" y="508">Facturada</text>
+      <text class="state-chip-name sub" x="669.0" y="526">por Bayer</text>
+    </g>
+    <g class="state-chip-g" data-state="4">
+      <rect class="state-chip-rect" x="905.0" y="488" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="919.0" y="508">4</text>
+      <text class="state-chip-name" x="935.0" y="508">Finalizada</text>
+      <text class="state-chip-name sub" x="919.0" y="526">c/ comisión</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-autorizacion" onclick="openMeta('rev-autorizacion', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Autorización</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>Venta Directa tiene sólo 4 estados según el PDF de Algoritmo. El valor diferencial frente a Venta es que la operación comercial principal la hace Bayer; Lartirigoyen facilita y cobra comisión.</p></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="vd2">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO VD2</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Rechazo o anulación del acuerdo</div>
+            <div class="scenario-desc">No se completa la autorización de la venta directa. El trámite se cierra sin facturación.</div>
+          </div>
+          <div class="scenario-tag tag-excepcion">Excepción</div>
+          <div class="scenario-steps">4 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 428" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="278" />
+
+  <line class="state-leader" x1="330" y1="188.0" x2="330" y2="298" />
+<line class="state-leader bad" x1="820" y1="246.5" x2="820" y2="298" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 184.5 88.0 A 18 18 0 0 1 202.5 106.0 L 202.5 146.0 A 18 18 0 0 0 220.5 164.0 L 251.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 409.0 164.0 L 542 164.0 A 18 18 0 0 1 560 182.0 L 560 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow bad" d="M 612 240.0 L 807 240.0" marker-end="url(#arrow-bad)" />
+    <text class="flow-label bad" x="640" y="232.0">No</text>
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">Venta directa</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">propuesta</text>
+<g class="node" data-node="vd2_reg" onclick="openDetail(this)">
+      <rect class="node-rect" x="251.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="330" y="161.0" text-anchor="middle">Registrar VD</text>
+      <text class="node-code" data-sync-field="code" x="330" y="176.0" text-anchor="middle">[VDIR]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="401.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="401.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="vd2_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 555 217.0 Q 560 214.0 565 217.0 L 607 237.0 Q 612 240.0 607 243.0 L 565 263.0 Q 560 266.0 555 263.0 L 513 243.0 Q 508 240.0 513 237.0 Z" />
+      <text class="gw-label" x="560" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza</text>
+      <text class="gw-label" x="560" y="249.0" text-anchor="middle" dominant-baseline="central">acuerdo?</text>
+    </g>
+<g class="node" data-node="vd2_rej" onclick="openDetail(this)">
+      <circle class="end-event bad" cx="820" cy="240.0" r="13" />
+      <circle class="end-core bad" cx="820" cy="240.0" r="6" />
+      <text class="end-label bad" x="820" y="218.0" text-anchor="middle" font-weight="600">VD rechazada</text>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="298" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="318">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="265.0" y="336" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="279.0" y="356">1</text>
+      <text class="state-chip-name" x="295.0" y="356">Pend.</text>
+      <text class="state-chip-name sub" x="279.0" y="374">autorización</text>
+      <g class="meta-badge" data-meta="modificar" onclick="event.stopPropagation(); openMeta('modificar', this)">
+        <circle class="bg-mod" cx="377.0" cy="330" r="8" />
+        <text class="t-mod" x="377.0" y="331">M</text>
+      </g>
+      <g class="meta-badge" data-meta="anular" onclick="event.stopPropagation(); openMeta('anular', this)">
+        <circle class="bg-anu" cx="359.0" cy="330" r="8" />
+        <text class="t-anu" x="359.0" y="331">A</text>
+      </g>
+    </g>
+    <g class="state-chip-g" data-state="15">
+      <rect class="state-chip-rect bad" x="755.0" y="390" width="130" height="48" rx="8" />
+      <text class="state-chip-num bad" x="769.0" y="410">15</text>
+      <text class="state-chip-name bad" x="785.0" y="410">VD</text>
+      <text class="state-chip-name sub bad" x="769.0" y="428">rechazada</text>
+      <g class="meta-badge" data-meta="rev-rechazo" onclick="event.stopPropagation(); openMeta('rev-rechazo', this)">
+        <circle class="bg-rev" cx="867.0" cy="384" r="8" />
+        <text class="t-rev" x="867.0" y="385">↺</text>
+      </g>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span><span class="meta-mini" data-meta="rev-rechazo" onclick="openMeta('rev-rechazo', this)"><span class="meta-mini-ico" style="background:var(--meta-rev-bg);color:var(--meta-rev-ink);border-color:#C8A73D">↺</span>Rev. Rechazo</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Relación con otros escenarios</div><ul><li>Negativo del <b>VD1 camino feliz</b>.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="scenario " data-scenario="vd3">
+        <div class="scenario-head" onclick="toggleScenario(this)">
+          <div class="scenario-num">ESCENARIO VD3</div>
+          <div class="scenario-body-head">
+            <div class="scenario-name">Con operación física en depósito Lartirigoyen</div>
+            <div class="scenario-desc">La mercadería de Bayer pasa por depósito de Lartirigoyen antes de llegar al cliente. Se registran entrada y salida.</div>
+          </div>
+          <div class="scenario-tag tag-variante">Variante</div>
+          <div class="scenario-steps">7 nodos</div>
+          <button class="scenario-toggle" aria-label="Expandir">+</button>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-diagram">
+            <svg viewBox="0 0 1400 656" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="context-stroke" stroke="none"/>
+    </marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L9 5 L2 8 z" fill="#CD6155" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect class="lane-bg external" x="0" y="50" width="1400" height="76" />
+    <rect x="0" y="50" width="4" height="76" fill="#A8BEC0" />
+    <line class="lane-divider" x1="0" y1="50" x2="1400" y2="50" />
+    <text class="lane-label" x="16" y="88.0" dominant-baseline="central">Cliente</text>
+    <rect class="lane-bg even" x="0" y="126" width="1400" height="76" />
+    <rect x="0" y="126" width="4" height="76" fill="var(--sector-comercial)" />
+    <line class="lane-divider" x1="0" y1="126" x2="1400" y2="126" />
+    <text class="lane-label" x="16" y="164.0" dominant-baseline="central">Comercial</text>
+    <rect class="lane-bg odd" x="0" y="202" width="1400" height="76" />
+    <rect x="0" y="202" width="4" height="76" fill="var(--sector-gerencia)" />
+    <line class="lane-divider" x1="0" y1="202" x2="1400" y2="202" />
+    <text class="lane-label" x="16" y="240.0" dominant-baseline="central">Gerencia</text>
+    <rect class="lane-bg even" x="0" y="278" width="1400" height="76" />
+    <rect x="0" y="278" width="4" height="76" fill="var(--sector-deposito)" />
+    <line class="lane-divider" x1="0" y1="278" x2="1400" y2="278" />
+    <text class="lane-label" x="16" y="316.0" dominant-baseline="central">Depósito</text>
+    <rect class="lane-bg odd" x="0" y="354" width="1400" height="76" />
+    <rect x="0" y="354" width="4" height="76" fill="var(--sector-admin)" />
+    <line class="lane-divider" x1="0" y1="354" x2="1400" y2="354" />
+    <text class="lane-label" x="16" y="392.0" dominant-baseline="central">Administración</text>
+    <rect class="lane-bg external" x="0" y="430" width="1400" height="76" />
+    <rect x="0" y="430" width="4" height="76" fill="#9AA8B3" />
+    <line class="lane-divider" x1="0" y1="430" x2="1400" y2="430" />
+    <text class="lane-label" x="16" y="468.0" dominant-baseline="central">Bayer</text>
+    <line class="lane-divider" x1="0" y1="506" x2="1400" y2="506" />
+    <line class="lane-divider" x1="110" y1="50" x2="110" y2="506" />
+
+  <line class="state-leader" x1="290" y1="188.0" x2="290" y2="526" />
+<line class="state-leader" x1="450" y1="253.0" x2="450" y2="526" />
+<line class="state-leader" x1="640" y1="340.0" x2="640" y2="526" />
+<line class="state-leader" x1="840" y1="340.0" x2="840" y2="526" />
+<line class="state-leader" x1="1030" y1="492.0" x2="1030" y2="526" />
+<line class="state-leader" x1="1240" y1="416.0" x2="1240" y2="526" />
+
+  <path class="flow-arrow" d="M 154 88.0 L 164.5 88.0 A 18 18 0 0 1 182.5 106.0 L 182.5 146.0 A 18 18 0 0 0 200.5 164.0 L 211.0 164.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 369.0 164.0 L 432 164.0 A 18 18 0 0 1 450 182.0 L 450 214.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 450 266.0 L 450 298.0 A 18 18 0 0 0 468 316.0 L 561.0 316.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 719.0 316.0 L 761.0 316.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 919.0 316.0 L 1012 316.0 A 18 18 0 0 1 1030 334.0 L 1030 444.0" marker-end="url(#arrow)" />
+<path class="flow-arrow" d="M 1109.0 468.0 L 1222 468.0 A 18 18 0 0 0 1240 450.0 L 1240 416.0" marker-end="url(#arrow)" />
+
+  <circle class="start-event" cx="140" cy="88.0" r="14" />
+    <text class="start-label" x="140" y="64.0" text-anchor="middle">VD con tránsito</text>
+    <text class="start-trigger" x="140" y="78.0" text-anchor="middle">en depósito Larti</text>
+<g class="node" data-node="vd3_reg" onclick="openDetail(this)">
+      <rect class="node-rect" x="211.0" y="140.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="290" y="161.0" text-anchor="middle">Registrar VD</text>
+      <text class="node-code" data-sync-field="code" x="290" y="176.0" text-anchor="middle">[VDIR]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle com" cx="361.0" cy="146.0" r="9" />
+        <text class="pos-chip-text com" x="361.0" y="146.0">com</text>
+      </g>
+    </g>
+<g class="node" data-node="vd3_gw" onclick="openDetail(this)">
+      <path class="gw-diamond" d="M 445 217.0 Q 450 214.0 455 217.0 L 497 237.0 Q 502 240.0 497 243.0 L 455 263.0 Q 450 266.0 445 263.0 L 403 243.0 Q 398 240.0 403 237.0 Z" />
+      <text class="gw-label" x="450" y="235.0" text-anchor="middle" dominant-baseline="central">¿Autoriza?</text>
+    </g>
+<g class="node" data-node="vd3_ingreso" onclick="openDetail(this)">
+      <rect class="node-rect" x="561.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="640" y="313.0" text-anchor="middle">Ingreso de Bayer</text>
+      <text class="node-code" data-sync-field="code" x="640" y="328.0" text-anchor="middle">[REM-IN]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="711.0" cy="298.0" r="9" />
+        <text class="pos-chip-text fis" x="711.0" y="298.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="vd3_egreso" onclick="openDetail(this)">
+      <rect class="node-rect" x="761.0" y="292.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="840" y="313.0" text-anchor="middle">Egreso al cliente</text>
+      <text class="node-code" data-sync-field="code" x="840" y="328.0" text-anchor="middle">[REM-OUT]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle fis" cx="911.0" cy="298.0" r="9" />
+        <text class="pos-chip-text fis" x="911.0" y="298.0">fis</text>
+      </g>
+    </g>
+<g class="node" data-node="vd3_facBayer" onclick="openDetail(this)">
+      <rect class="node-rect" x="951.0" y="444.0" width="158" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1030" y="465.0" text-anchor="middle">Factura Bayer</text>
+      <text class="node-code" data-sync-field="code" x="1030" y="480.0" text-anchor="middle">[FACBAY]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1101.0" cy="450.0" r="9" />
+        <text class="pos-chip-text con" x="1101.0" y="450.0">con</text>
+      </g>
+    </g>
+<g class="node" data-node="vd3_com" onclick="openDetail(this)">
+      <rect class="node-rect" x="1170.0" y="368.0" width="140" height="48" rx="10" />
+      <text class="node-title" data-sync-field="title" x="1240" y="389.0" text-anchor="middle">Factura comisión</text>
+      <text class="node-code" data-sync-field="code" x="1240" y="404.0" text-anchor="middle">[FACCOM]</text>
+      <g class="pos-chip-g">
+        <circle class="pos-chip-circle con" cx="1302.0" cy="374.0" r="9" />
+        <text class="pos-chip-text con" x="1302.0" y="374.0">con</text>
+      </g>
+    </g>
+
+  <rect class="state-band-bg" x="0" y="526" width="1400" height="120" />
+    <text class="state-band-head" x="16" y="546">Estado en Algoritmo</text>
+    <g class="state-chip-g" data-state="1">
+      <rect class="state-chip-rect" x="225.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="239.0" y="584">1</text>
+      <text class="state-chip-name" x="255.0" y="584">Pend.</text>
+      <text class="state-chip-name sub" x="239.0" y="602">aut.</text>
+    </g>
+    <g class="state-chip-g" data-state="2">
+      <rect class="state-chip-rect" x="385.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="399.0" y="584">2</text>
+      <text class="state-chip-name" x="415.0" y="584">Aut.</text>
+    </g>
+    <g class="state-chip-g" data-state="2.5">
+      <rect class="state-chip-rect" x="575.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="589.0" y="584">2.5</text>
+      <text class="state-chip-name" x="605.0" y="584">Ingresada</text>
+      <text class="state-chip-name sub" x="589.0" y="602">física</text>
+    </g>
+    <g class="state-chip-g" data-state="3">
+      <rect class="state-chip-rect" x="775.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="789.0" y="584">3</text>
+      <text class="state-chip-name" x="805.0" y="584">Entregada</text>
+      <text class="state-chip-name sub" x="789.0" y="602">al cliente</text>
+    </g>
+    <g class="state-chip-g" data-state="3.5">
+      <rect class="state-chip-rect" x="965.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="979.0" y="584">3.5</text>
+      <text class="state-chip-name" x="995.0" y="584">Facturada</text>
+      <text class="state-chip-name sub" x="979.0" y="602">Bayer</text>
+    </g>
+    <g class="state-chip-g" data-state="4">
+      <rect class="state-chip-rect" x="1175.0" y="564" width="130" height="48" rx="8" />
+      <text class="state-chip-num" x="1189.0" y="584">4</text>
+      <text class="state-chip-name" x="1205.0" y="584">Finalizada</text>
+      <text class="state-chip-name sub" x="1189.0" y="602">c/ comisión</text>
+    </g>
+</svg>
+          </div>
+          <div class="scenario-meta"><div class="scenario-meta-label">Meta-acciones aplicables</div><div class="scenario-meta-chips"><span class="meta-mini" data-meta="modificar" onclick="openMeta('modificar', this)"><span class="meta-mini-ico" style="background:var(--meta-mod-bg);color:var(--meta-mod-ink);border-color:var(--meta-mod)">M</span>Modificar</span><span class="meta-mini" data-meta="anular" onclick="openMeta('anular', this)"><span class="meta-mini-ico" style="background:var(--meta-anu);color:#fff;border-color:var(--meta-anu)">A</span>Anular</span></div></div>
+          <div class="scenario-notes"><div class="scenario-notes-label">Notas</div><p>Variante operativa cuando la mercadería pasa físicamente por depósito Lartirigoyen. Los estados intermedios (2.5, 3.5) son referenciales — habría que definirlos con Algoritmo si este camino está soportado formalmente.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+<!-- DETAIL PANEL -->
+<aside class="detail-panel" id="detailPanel">
+  <div class="detail-head">
+    <div>
+      <h3 class="dp-title" id="dpTitle" data-field="title">—</h3>
+      <div class="dp-code" id="dpCode" data-field="code">—</div>
+    </div>
+    <button onclick="closeDetail()">×</button>
+  </div>
+  <div class="detail-body">
+    <div class="detail-row"><span class="k">Área</span><span class="v" id="dpArea" data-field="area">—</span></div>
+    <div class="detail-row"><span class="k">Tipo</span><span class="v" id="dpType" data-field="type">—</span></div>
+    <div class="detail-row"><span class="k">Posición</span><span class="v" id="dpPos" data-field="pos">—</span></div>
+    <div class="detail-row"><span class="k">Estado antes</span><span class="v" id="dpStateBefore" data-field="stateBefore">—</span></div>
+    <div class="detail-row"><span class="k">Estado después</span><span class="v" id="dpStateAfter" data-field="stateAfter">—</span></div>
+    <div class="detail-desc" id="dpDesc" data-field="desc">—</div>
+  </div>
+  <div class="detail-actions">
+    <button class="btn-cancel" onclick="cancelDetailEdit()">Descartar</button>
+    <button class="btn-save" onclick="saveDetailEdit()">Guardar</button>
+  </div>
+</aside>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>Modo edición</h3>
+    <p>Ingresá la contraseña para editar.</p>
+    <input type="password" id="pwdInput" placeholder="Contraseña" />
+    <div class="actions">
+      <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="tryUnlock()">Desbloquear</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   SUPABASE — configuración
+   Para activar sincronización entre navegadores:
+   1. Crear cuenta en https://supabase.com y un proyecto nuevo
+   2. En el SQL Editor correr el script (ver README o instrucciones)
+   3. En Project Settings > API copiar el Project URL y anon/public key
+   4. Pegarlos acá abajo (reemplazando los valores entre comillas)
+   Si se dejan los valores por defecto, el documento se guarda sólo en el
+   navegador local (localStorage).
+   ===================================================================== */
+const SUPABASE_URL = 'https://xxxxxxxxxx.supabase.co';
+const SUPABASE_ANON_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+const SUPABASE_ENABLED = !SUPABASE_URL.includes('xxxxxx') && !SUPABASE_ANON_KEY.includes('xxxxxx');
+let sb = null;
+
+/* =====================================================================
+   META-ACCIONES (catálogo)
+   ===================================================================== */
+const META = {
+  'modificar': {
+    title: 'Modificar', code: 'MODIFICAR',
+    area: 'Transversal',
+    type: 'Meta-acción',
+    pos: '—',
+    stateBefore: 'Estados editables',
+    stateAfter: 'Mismo estado (sin transición)',
+    desc: 'Permite editar datos del documento sin cambiar de estado. Aplicable desde estados pre-autorización.'
+  },
+  'anular': {
+    title: 'Anular', code: 'ANUOC',
+    area: 'Transversal',
+    type: 'Meta-acción',
+    pos: '—',
+    stateBefore: 'Pendiente de autorización',
+    stateAfter: 'No autorizada',
+    desc: 'Anula el trámite antes de su autorización. Es un cierre distinto del rechazo por autorizador.'
+  },
+  'rev-autorizacion': {
+    title: 'Reversión de Autorización', code: 'REVERTIR AUT',
+    area: 'Transversal',
+    type: 'Meta-acción',
+    pos: '—',
+    stateBefore: 'Autorizada',
+    stateAfter: 'Pendiente de autorización',
+    desc: 'Deshace una autorización ya otorgada. Devuelve el trámite al estado pendiente.'
+  },
+  'rev-rechazo': {
+    title: 'Reversión de Rechazo', code: 'REVERTIR RCH',
+    area: 'Transversal',
+    type: 'Meta-acción',
+    pos: '—',
+    stateBefore: 'Rechazada',
+    stateAfter: 'Pendiente de autorización',
+    desc: 'Reabre un trámite rechazado para un nuevo intento de autorización.'
+  }
+};
+
+/* =====================================================================
+   NODES (catálogo global para persistencia)
+   Todas las definiciones de nodos del DOM se cargan al inicio
+   ===================================================================== */
+const NODES = {};
+document.querySelectorAll('g.node[data-node]').forEach(g => {
+  const id = g.getAttribute('data-node');
+  if(NODES[id]) return;
+  const titleEl = g.querySelector('[data-sync-field="title"]') || g.querySelector('.node-title') || g.querySelector('.gw-label') || g.querySelector('.end-label');
+  const codeEl = g.querySelector('[data-sync-field="code"]') || g.querySelector('.node-code');
+  NODES[id] = {
+    title: titleEl ? titleEl.textContent : id,
+    code: codeEl ? codeEl.textContent : '',
+    area: '—',
+    type: g.querySelector('.gw-diamond') ? 'Decisión' : (g.querySelector('.end-event') ? 'Fin' : 'Acción'),
+    pos: '—',
+    stateBefore: '—',
+    stateAfter: '—',
+    desc: 'Hacé click en Editar para completar la descripción de este nodo.'
+  };
+});
+
+/* =====================================================================
+   STORAGE (localStorage + Supabase opcional)
+   ===================================================================== */
+const STORAGE_KEY = 'lartirigoyen-docu-v1';
+function loadFromStorage(){
+  try{
+    const s = localStorage.getItem(STORAGE_KEY);
+    if(!s) return;
+    const d = JSON.parse(s);
+    if(d.nodes) Object.keys(d.nodes).forEach(k => { if(NODES[k]) Object.assign(NODES[k], d.nodes[k]); });
+    if(d.meta) Object.keys(d.meta).forEach(k => { if(META[k]) Object.assign(META[k], d.meta[k]); });
+  } catch(e){ console.warn('Storage load error:', e); }
+}
+function saveToStorage(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({ nodes: NODES, meta: META })); }
+  catch(e){ console.warn('Storage save error:', e); }
+  if(SUPABASE_ENABLED) saveToSupabase();
+}
+
+/* Supabase: carga inicial, guardado y realtime sync */
+async function initSupabase(){
+  if(!SUPABASE_ENABLED) return;
+  // Cargar el SDK dinámicamente
+  await new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js';
+    s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  await loadFromSupabase();
+  subscribeToSupabase();
+}
+
+async function loadFromSupabase(){
+  if(!sb) return;
+  const { data, error } = await sb.from('larti_docu').select('*').eq('id', 'main').maybeSingle();
+  if(error){ console.warn('Supabase load:', error.message); return; }
+  if(!data) return;
+  if(data.nodes) Object.keys(data.nodes).forEach(k => { if(NODES[k]) Object.assign(NODES[k], data.nodes[k]); });
+  if(data.meta) Object.keys(data.meta).forEach(k => { if(META[k]) Object.assign(META[k], data.meta[k]); });
+  syncAllSvgNodes();
+  // Guardar también a localStorage
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({ nodes: NODES, meta: META })); } catch(e){}
+}
+
+async function saveToSupabase(){
+  if(!sb) return;
+  const { error } = await sb.from('larti_docu').upsert({
+    id: 'main',
+    nodes: NODES,
+    meta: META,
+    updated_at: new Date().toISOString()
+  });
+  if(error) console.warn('Supabase save:', error.message);
+}
+
+function subscribeToSupabase(){
+  if(!sb) return;
+  sb.channel('larti_docu_changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'larti_docu', filter: 'id=eq.main' },
+      (payload) => {
+        const data = payload.new;
+        if(!data) return;
+        if(data.nodes) Object.keys(data.nodes).forEach(k => { if(NODES[k]) Object.assign(NODES[k], data.nodes[k]); });
+        if(data.meta) Object.keys(data.meta).forEach(k => { if(META[k]) Object.assign(META[k], data.meta[k]); });
+        syncAllSvgNodes();
+      })
+    .subscribe();
+}
+
+function updateSvgNode(id){
+  const g = document.querySelector('g.node[data-node="' + id + '"]');
+  if(!g || !NODES[id]) return;
+  const titleEl = g.querySelector('[data-sync-field="title"]');
+  const codeEl  = g.querySelector('[data-sync-field="code"]');
+  if(titleEl) titleEl.textContent = NODES[id].title;
+  if(codeEl)  codeEl.textContent  = NODES[id].code;
+}
+function syncAllSvgNodes(){ Object.keys(NODES).forEach(updateSvgNode); }
+
+loadFromStorage();
+syncAllSvgNodes();
+if(SUPABASE_ENABLED) initSupabase();
+
+/* =====================================================================
+   DETAIL PANEL
+   ===================================================================== */
+let currentNodeId = null, currentMetaId = null, currentSnapshot = null;
+
+const FIELDS = ['title','code','area','type','pos','stateBefore','stateAfter','desc'];
+const FIELD_TO_EL = {
+  title: 'dpTitle', code: 'dpCode', area: 'dpArea', type: 'dpType',
+  pos: 'dpPos', stateBefore: 'dpStateBefore', stateAfter: 'dpStateAfter', desc: 'dpDesc'
+};
+
+function renderDetail(data){
+  FIELDS.forEach(f => {
+    const el = document.getElementById(FIELD_TO_EL[f]);
+    if(el) el.textContent = data[f] || '—';
+  });
+}
+
+function openDetail(el){
+  const id = el.getAttribute('data-node');
+  const n = NODES[id];
+  if(!n) return;
+  currentNodeId = id;
+  currentMetaId = null;
+  currentSnapshot = JSON.parse(JSON.stringify(n));
+  renderDetail(n);
+  applyEditableToFields();
+  document.getElementById('detailPanel').classList.add('on');
+  positionPanelNear(el);
+}
+
+function openMeta(metaKey, anchorEl){
+  const m = META[metaKey];
+  if(!m) return;
+  currentNodeId = null;
+  currentMetaId = metaKey;
+  currentSnapshot = JSON.parse(JSON.stringify(m));
+  renderDetail(m);
+  applyEditableToFields();
+  document.getElementById('detailPanel').classList.add('on');
+  if(anchorEl) positionPanelNear(anchorEl);
+}
+
+function closeDetail(){
+  if(editMode && currentSnapshot){
+    if(currentNodeId && NODES[currentNodeId]){
+      Object.assign(NODES[currentNodeId], currentSnapshot);
+      updateSvgNode(currentNodeId);
+    } else if(currentMetaId && META[currentMetaId]){
+      Object.assign(META[currentMetaId], currentSnapshot);
+    }
+  }
+  document.getElementById('detailPanel').classList.remove('on');
+  currentNodeId = null; currentMetaId = null; currentSnapshot = null;
+}
+
+function saveDetailEdit(){
+  const target = currentNodeId ? NODES[currentNodeId] : (currentMetaId ? META[currentMetaId] : null);
+  if(!target) return;
+  FIELDS.forEach(f => {
+    const el = document.getElementById(FIELD_TO_EL[f]);
+    if(el) target[f] = (el.textContent || '').trim() || '—';
+  });
+  saveToStorage();
+  if(currentNodeId) updateSvgNode(currentNodeId);
+  currentSnapshot = JSON.parse(JSON.stringify(target));
+  flashSaved();
+}
+
+function cancelDetailEdit(){
+  const target = currentNodeId ? NODES[currentNodeId] : (currentMetaId ? META[currentMetaId] : null);
+  if(!target || !currentSnapshot) return;
+  Object.assign(target, currentSnapshot);
+  renderDetail(target);
+  if(currentNodeId) updateSvgNode(currentNodeId);
+}
+
+function flashSaved(){
+  const btn = document.querySelector('.btn-save');
+  if(!btn) return;
+  const orig = btn.textContent;
+  btn.textContent = '✓ Guardado';
+  btn.style.background = 'var(--sz-ink-900)'; btn.style.color = '#fff';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+}
+
+function applyEditableToFields(){
+  FIELDS.forEach(f => {
+    const el = document.getElementById(FIELD_TO_EL[f]);
+    if(el){
+      el.contentEditable = editMode ? 'true' : 'false';
+      el.spellcheck = editMode;
+    }
+  });
+}
+
+function positionPanelNear(el){
+  const panel = document.getElementById('detailPanel');
+  if(!el) return;
+  const rect = el.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    const pH = panel.offsetHeight || 400;
+    const pW = 340; const gap = 16; const padV = 20;
+    const vw = window.innerWidth; const vh = window.innerHeight;
+    let left = rect.right + gap;
+    let top = rect.top + (rect.height/2) - (pH/2);
+    if(left + pW > vw - padV) left = rect.left - pW - gap;
+    if(left < padV){
+      left = Math.max(padV, Math.min(vw - pW - padV, rect.left));
+      top = rect.bottom + gap;
+    }
+    if(top + pH > vh - padV) top = Math.max(padV, vh - pH - padV);
+    if(top < 90) top = 90;
+    panel.style.left = left + 'px'; panel.style.top = top + 'px';
+    panel.style.right = 'auto'; panel.style.bottom = 'auto';
+  });
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDetail(); });
+document.addEventListener('click', e => {
+  const panel = document.getElementById('detailPanel');
+  if(!panel.classList.contains('on')) return;
+  if(panel.contains(e.target)) return;
+  if(e.target.closest('[data-node], .meta-badge, .meta-mini')) return;
+  closeDetail();
+});
+
+/* =====================================================================
+   EDIT MODE
+   ===================================================================== */
+const EDIT_PWD = 'simpleza';
+let editMode = false;
+
+document.getElementById('btnEdit').addEventListener('click', () => {
+  if(editMode) setEdit(false);
+  else {
+    document.getElementById('modalBg').classList.add('on');
+    document.getElementById('pwdInput').focus();
+  }
+});
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('on');
+  const inp = document.getElementById('pwdInput');
+  inp.value = ''; inp.style.outline = '';
+}
+function tryUnlock(){
+  const v = document.getElementById('pwdInput').value;
+  if(v === EDIT_PWD){ setEdit(true); closeModal(); }
+  else document.getElementById('pwdInput').style.outline = '2px solid var(--sz-terracota)';
+}
+function setEdit(on){
+  editMode = on;
+  document.body.classList.toggle('is-editing', on);
+  const es = document.getElementById('editState');
+  es.textContent = on ? 'Edición' : 'Lectura'; es.classList.toggle('on', on);
+  const be = document.getElementById('btnEdit');
+  be.textContent = on ? 'Salir' : 'Editar'; be.classList.toggle('on', on);
+  if(currentNodeId || currentMetaId){
+    applyEditableToFields();
+    const t = currentNodeId ? NODES[currentNodeId] : META[currentMetaId];
+    if(on && t) currentSnapshot = JSON.parse(JSON.stringify(t));
+  }
+}
+document.getElementById('pwdInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') tryUnlock();
+  if(e.key === 'Escape') closeModal();
+});
+
+/* =====================================================================
+   NAV ENTRE TRÁMITES
+   ===================================================================== */
+function switchTramite(id){
+  document.querySelectorAll('.tramite').forEach(t => t.classList.remove('active'));
+  document.querySelector('#tramite-' + id).classList.add('active');
+  document.querySelectorAll('.topbar nav button').forEach(b => b.classList.remove('active'));
+  document.querySelector('.topbar nav button[data-tramite="' + id + '"]').classList.add('active');
+  closeDetail();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =====================================================================
+   TOGGLE ESCENARIO
+   ===================================================================== */
+function toggleScenario(headEl){
+  const scenario = headEl.closest('.scenario');
+  scenario.classList.toggle('expanded');
+  closeDetail();
+}
+</script>
+</body>
+</html>
